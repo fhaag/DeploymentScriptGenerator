@@ -41,5 +41,68 @@ namespace Deployment.ScriptGenerator.Resources
 				return LoadTextFromResource("License");
 			}
 		}
+		
+		private static void SaveResourceToFile(string resourceName, string destPath)
+		{
+			using (var f = File.OpenWrite(destPath)) {
+				using (var s = typeof(ResourceLoader).Assembly.GetManifestResourceStream("Deployment.ScriptGenerator.Resources." + resourceName)) {
+					s.CopyTo(f);
+				}
+			}
+		}
+		
+		public static void SaveXsltStringExtensionsFile(GeneralSettings settings)
+		{
+			if (settings == null) {
+				throw new ArgumentNullException("settings");
+			}
+			
+			SaveResourceToFile("Code.XsltStringExtensions", Path.Combine(settings.PrepareToolDirectory(), "XsltStringExtensions.cs"));
+		}
+		
+		public static void SaveXsltJsonExtensionsFile(GeneralSettings settings)
+		{
+			if (settings == null) {
+				throw new ArgumentNullException("settings");
+			}
+			
+			SaveResourceToFile("Code.XsltJsonExtensions", Path.Combine(settings.PrepareToolDirectory(), "XsltJsonExtensions.cs"));
+		}
+		
+		public static void SaveAdvanceChangeLogXslt(GeneralSettings settings)
+		{
+			if (settings == null) {
+				throw new ArgumentNullException("settings");
+			}
+			
+			SaveResourceToFile("Code.AdvanceChangeLogXslt", Path.Combine(settings.PrepareToolDirectory(), "AdvanceChangeLog.xsl"));
+		}
+		
+		public static void SaveCreateHtmlChangeLogXslt(GeneralSettings settings)
+		{
+			if (settings == null) {
+				throw new ArgumentNullException("settings");
+			}
+			
+			SaveResourceToFile("Code.CreateHtmlChangeLogXslt", Path.Combine(settings.PrepareToolDirectory(), "CreateHtmlChangeLog.xsl"));
+		}
+		
+		public static void SaveCreateTextChangeLogXslt(GeneralSettings settings)
+		{
+			if (settings == null) {
+				throw new ArgumentNullException("settings");
+			}
+			
+			SaveResourceToFile("Code.CreateTextChangeLogXslt", Path.Combine(settings.PrepareToolDirectory(), "CreateTextChangeLog.xsl"));
+		}
+		
+		public static void SaveExampleProjectsXslt(GeneralSettings settings)
+		{
+			if (settings == null) {
+				throw new ArgumentNullException("settings");
+			}
+			
+			SaveResourceToFile("Code.ExampleProjectsXslt", Path.Combine(settings.PrepareToolDirectory(), "ExampleProjects.xsl"));
+		}
 	}
 }

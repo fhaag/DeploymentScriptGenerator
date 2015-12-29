@@ -31,6 +31,9 @@ using Deployment.ScriptGenerator.Resources;
 
 namespace Deployment.ScriptGenerator
 {
+	/// <summary>
+	/// Writes the central NAnt build script.
+	/// </summary>
 	internal static class NAntBuildScript
 	{
 		public static void Write(GeneralSettings settings)
@@ -87,6 +90,21 @@ namespace Deployment.ScriptGenerator
 			}
 			if (settings.SupportSourceForge) {
 				DeclareSiteSpecificId(settings, w, "SourceForge");
+			}
+			
+			// pretty project ID
+			
+			{
+				w.WriteStartElement("xmlpeek");
+				w.WriteAttributeString("file", settings.Options.PublicDirectory + "/" + settings.Options.ProjectInfoFile);
+				w.WriteAttributeString("xpath", "/local:project/local:prettyId");
+				w.WriteAttributeString("property", "project.prettyId");
+				
+				w.WriteStartElement("namespaces");
+				WriteXmlNamespace(w, "local", "http://local/");
+				w.WriteEndElement();
+				
+				w.WriteEndElement();
 			}
 			
 			// date and time
@@ -198,9 +216,16 @@ namespace Deployment.ScriptGenerator
 				w.WriteAttributeString("output", "bin/build/xslt/XsltExtensions.dll");
 				w.WriteAttributeString("target", "library");
 				w.WriteStartElement("sources");
-				w.WriteStartElement("include");
-				w.WriteAttributeString("name", settings.Options.ToolDirectory + "/XsltStringExtensions.cs"); // TODO: include this (and Json file) only when required
-				w.WriteEndElement();
+				if (settings.RequireXsltStringExtensions) {
+					w.WriteStartElement("include");
+					w.WriteAttributeString("name", settings.Options.ToolDirectory + "/XsltStringExtensions.cs");
+					w.WriteEndElement();
+				}
+				if (settings.RequireXsltJsonExtensions) {
+					w.WriteStartElement("include");
+					w.WriteAttributeString("name", settings.Options.ToolDirectory + "/XsltJsonExtensions.cs");
+					w.WriteEndElement();
+				}
 				w.WriteEndElement();
 				w.WriteEndElement();
 				
@@ -242,7 +267,7 @@ namespace Deployment.ScriptGenerator
 					w.WriteEndElement();
 				}
 				
-				{
+				if (settings.Options.TextChangeLog) {
 					w.WriteStartElement("style");
 					w.WriteAttributeString("style", settings.Options.ToolDirectory + "/CreateTextChangeLog.xsl");
 					w.WriteAttributeString("in", settings.Options.PublicDirectory + "/" + settings.Options.ProjectInfoFile);
@@ -269,6 +294,8 @@ namespace Deployment.ScriptGenerator
 					w.WriteStartElement("parameters");
 					WriteXsltParameter(w, "ReleaseVersion", "${release.version}");
 					WriteXsltParameter(w, "ReleaseDate", "${internal.userFriendlyDate}");
+					WriteXsltParameter(w, "ProjectUrl", ""); // TODO: retrieve project website URL
+					WriteXsltParameter(w, "TextChangeLogUrl", ""); // TODO: retrieve text changelog URL
 					w.WriteEndElement();
 					
 					w.WriteEndElement();
@@ -368,6 +395,9 @@ namespace Deployment.ScriptGenerator
 					w.WriteAttributeString("style", settings.Options.ToolDirectory + "/ExampleProjects.xsl");
 					w.WriteAttributeString("in", "${filename}");
 					w.WriteAttributeString("out", "${filename}.tmp");
+					w.WriteStartElement("parameters");
+					WriteXsltParameter(w, "ProjectPrefix", "${project.prettyId}");
+					w.WriteEndElement();
 					w.WriteEndElement();
 					w.WriteStartElement("delete");
 					w.WriteAttributeString("file", "${filename}");
@@ -445,7 +475,22 @@ namespace Deployment.ScriptGenerator
 			
 			WriteHeadlineComment(w, "Publication");
 			
-			// TODO: load credentials
+			if (settings.SupportCodePlex) {
+				PeekApiKey(settings, w, "CodePlexUser", "internal.CodePlexUser");
+				PeekApiKey(settings, w, "CodePlexPW", "internal.CodePlexPW");
+			}
+			if (settings.SupportGithub) {
+				PeekApiKey(settings, w, "GithubUser", "internal.GithubUser");
+				PeekApiKey(settings, w, "GithubPW", "internal.GithubPW");
+			}
+			if (settings.RequireLocalWebPath) {
+				PeekApiKey(settings, w, "localWebPath", "internal.WebPath");
+			}
+			if (settings.SupportSourceForge) {
+				PeekApiKey(settings, w, "SourceForgeUser", "internal.SFUser");
+				PeekApiKey(settings, w, "SourceForgeSSH", "internal.SFSSHKey");
+				PeekApiKey(settings, w, "SourceForgeAPI", "internal.SFapikey");
+			}
 			
 			{
 				StartTarget(w, "publish");
@@ -474,9 +519,9 @@ namespace Deployment.ScriptGenerator
 					w.WriteEndElement();
 				}
 				
-				if (settings.Options.WebChangeLog) {
+				if (settings.Options.WebApiDoc || settings.Options.WebChangeLog) {
 					w.WriteStartElement("call");
-					w.WriteAttributeString("target", "publish-web"); // TODO: exclude API doc for prereleases
+					w.WriteAttributeString("target", "publish-web");
 					w.WriteEndElement();
 				}
 				
@@ -502,12 +547,6 @@ namespace Deployment.ScriptGenerator
 			if (settings.Options.ReleaseOnGithub) {
 				StartTarget(w, "publish-Github-release",
 				            "build-deployment-libs");
-				
-				w.WriteStartElement("xmlpeek");
-				w.WriteAttributeString("file", settings.Options.KeyDirectory + "/apikeys.xml");
-				w.WriteAttributeString("xpath", "/keys/key[@id = 'GithubPW']/@value");
-				w.WriteAttributeString("property", "internal.GithubPW");
-				w.WriteEndElement();
 				
 				w.WriteStartElement("script");
 				w.WriteAttributeString("language", "c#");
@@ -560,16 +599,73 @@ namespace Deployment.ScriptGenerator
 				w.WriteEndElement();
 			}
 			
-			if (settings.Options.WebChangeLog) {
+			if (settings.Options.WebChangeLog || settings.Options.WebApiDoc) {
 				StartTarget(w, "publish-web");
 				
-				if (settings.Options.WebChangeLog) {
-					// TODO: distinguish Github/SF website
-					CopyFile(w, settings.Options.ReleaseDirectory + "/changelog.html", "${internal.WebPath}/");
+				if (settings.Options.PublishGithubPages) {
+					if (settings.Options.WebChangeLog) {
+						CopyFile(w, settings.Options.ReleaseDirectory + "/changelog.html", "${internal.WebPath}/", true);
+					}
+					
+					if (settings.Options.WebApiDoc) {
+						w.WriteStartElement("delete");
+						w.WriteAttributeString("dir", "${internal.WebPath}/api");
+						w.WriteEndElement();
+						
+						w.WriteStartElement("copy");
+						w.WriteAttributeString("todir", "${internal.WebPath}/api");
+						WriteWebApiDocFileset(w);
+						w.WriteEndElement();
+					}
 				}
-				
-				if (settings.Options.WebApiDoc) {
-					// TODO: web API doc
+				if (settings.Options.PublishSourceForgeProjectWeb) {
+					var args = new List<string>() {
+						"/c",
+						"WinSCP",
+						"/console",
+						"/command",
+						WINSCP_SF_CONNECTION_COMMAND,
+						"option batch continue",
+						"option confirm off",
+						"cd /home/project-web/${project.SFProject}/htdocs"
+					};
+					
+					if (settings.Options.WebChangeLog) {
+						args.Add("put changelog.html");
+					}
+					
+					if (settings.Options.WebApiDoc) {
+						w.WriteStartElement("tar");
+						w.WriteAttributeString("destfile", settings.Options.ReleaseDirectory + "/webapidoc.tar.gz");
+						w.WriteAttributeString("compression", "GZip");
+						WriteWebApiDocFileset(w);
+						w.WriteEndElement();
+						
+						args.Add("mkdir newapi");
+						args.Add("put webapidoc.tar.gz newapi/");
+					}
+					
+					args.Add("close");
+					args.Add("exit");
+					
+					ExecuteProgram(w, "cmd", settings.Options.ReleaseDirectory,
+					               args.ToArray());
+					
+					if (settings.Options.WebApiDoc) {
+						w.WriteStartElement("delete");
+						w.WriteAttributeString("file", settings.Options.ReleaseDirectory + "/webapidoc.tar.bz");
+						w.WriteEndElement();
+						
+						ExecuteProgram(w, "cmd", null,
+						               "/c", "plink", "-ssh", "-l", "${internal.SFUser},${project.SFProject}", "-i", "${internal.SFSSHKey}", "shell.sourceforge.net", "create");
+						
+						w.WriteStartElement("sleep");
+						w.WriteAttributeString("seconds", "30");
+						w.WriteEndElement();
+						
+						ExecuteProgram(w, "cmd", null,
+						               "/c", "plink", "-ssh", "-l", "${internal.SFUser},${project.SFProject}", "-i", "${internal.SFSSHKey}", "shell.sourceforge.net", "(cd /home/project-web/${project.SFProject}/htdocs/newapi && tar -xf webapidoc.tar.gz && mv Index.html index.html && cd .. && mv api oldapi && mv newapi api && rm -r oldapi) || echo 'The SSH session was not successful.' ; shutdown");
+					}
 				}
 				
 				w.WriteEndElement();
@@ -583,7 +679,7 @@ namespace Deployment.ScriptGenerator
 				string tempInfoFile = settings.Options.ReleaseDirectory + "/new_" + settings.Options.ProjectInfoFile;
 				
 				w.WriteStartElement("style");
-				w.WriteAttributeString("style", settings.Options.ToolDirectory + "/AdvanceChangelog.xsl");
+				w.WriteAttributeString("style", settings.Options.ToolDirectory + "/AdvanceChangeLog.xsl");
 				w.WriteAttributeString("in", settings.Options.PublicDirectory + "/" + settings.Options.ProjectInfoFile);
 				w.WriteAttributeString("out", tempInfoFile);
 				w.WriteStartElement("parameters");
@@ -835,11 +931,14 @@ namespace Deployment.ScriptGenerator
 			w.WriteEndElement();
 		}
 		
-		private static void CopyFile(XmlWriter w, string src, string dest)
+		private static void CopyFile(XmlWriter w, string src, string dest, bool overwriteNewer = false)
 		{
 			w.WriteStartElement("copy");
 			w.WriteAttributeString("file", src);
 			w.WriteAttributeString("tofile", dest);
+			if (overwriteNewer) {
+				w.WriteAttributeString("overwrite", "true");
+			}
 			w.WriteEndElement();
 		}
 		
@@ -855,6 +954,41 @@ namespace Deployment.ScriptGenerator
 				w.WriteAttributeString("value", arg);
 				w.WriteEndElement();
 			}
+			w.WriteEndElement();
+		}
+		
+		private static void XmlPeek(XmlWriter w, string xmlFile, string xpath, string property)
+		{
+			w.WriteStartElement("xmlpeek");
+			w.WriteAttributeString("file", xmlFile);
+			w.WriteAttributeString("xpath", xpath);
+			w.WriteAttributeString("property", property);
+			w.WriteEndElement();
+		}
+		
+		private static void PeekApiKey(GeneralSettings settings, XmlWriter w, string id, string property)
+		{
+			XmlPeek(w, settings.Options.KeyDirectory + "/apikeys.xml", "/keys/key[@id = '" + id + "']/@value", property);
+		}
+		
+		private const string WINSCP_SF_CONNECTION_COMMAND = "\"open sftp://${internal.SFUser},${project.SFProject}@web.sourceforge.net \"\"-privatekey=${internal.SFSSHKey}\"\"\"";
+		
+		private static void WriteWebApiDocFileset(XmlWriter w)
+		{
+			w.WriteStartElement("fileset");
+			w.WriteAttributeString("basedir", "doc/Help");
+			w.WriteStartElement("include");
+			w.WriteAttributeString("name", "**/*");
+			w.WriteEndElement();
+			w.WriteStartElement("exclude");
+			w.WriteAttributeString("name", "*.chm");
+			w.WriteEndElement();
+			w.WriteStartElement("exclude");
+			w.WriteAttributeString("name", "LastBuild.log");
+			w.WriteEndElement();
+			w.WriteStartElement("exclude");
+			w.WriteAttributeString("name", "*.chw");
+			w.WriteEndElement();
 			w.WriteEndElement();
 		}
 	}

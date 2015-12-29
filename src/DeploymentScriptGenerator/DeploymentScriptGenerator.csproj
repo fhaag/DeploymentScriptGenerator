@@ -60,13 +60,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiKeysTemplateFile.cs" />
     <Compile Include="ArchiveType.cs" />
     <Compile Include="DownloadPackage.cs" />
     <Compile Include="GeneralSettings.cs" />
     <Compile Include="GeneratorOptions.cs" />
     <Compile Include="NAntBuildScript.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ProjectInfoFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Resources\Code\XsltJsonExtensions.cs">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.XsltJsonExtensions</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Code\XsltStringExtensions.cs">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.XsltStringExtensions</LogicalName>
+    </EmbeddedResource>
     <Compile Include="Resources\ResourceLoader.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -74,9 +82,22 @@
     <EmbeddedResource Include="Resources\License.txt">
       <LogicalName>Deployment.ScriptGenerator.Resources.License</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Code\AdvanceChangelog.xsl">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.AdvanceChangeLogXslt</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Code\CreateHtmlChangeLog.xsl">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.CreateHtmlChangeLogXslt</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Code\CreateTextChangeLog.xsl">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.CreateTextChangeLogXslt</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Code\ExampleProjects.xsl">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.ExampleProjectsXslt</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources" />
+    <Folder Include="Resources\Code" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

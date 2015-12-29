@@ -30,11 +30,16 @@ namespace Deployment.ScriptGenerator
 {
 	internal class GeneratorOptions
 	{
+		// TODO: example projects
+		
 		[Option('a', "apidoc", HelpText = "Indicates whether to release a downloadable API documentation.")]
 		public bool ReleaseApiDoc { get; set; }
 		
 		[Option('c', "codeplex", HelpText = "Indicates whether to release downloads as CodePlex releases.")]
 		public bool ReleaseOnCodePlex { get; set; }
+		
+		[Option('e', "githubpages", HelpText = "Indicates whether to publish website content via Github Pages.")]
+		public bool PublishGithubPages { get; set; }
 		
 		[Option('f', "format", DefaultValue = "zip", HelpText = "The default format for downloadable files (can be zip, tar, tgz, or tbz).")]
 		public string DownloadFormat { get; set; }
@@ -51,10 +56,16 @@ namespace Deployment.ScriptGenerator
 		[Option('n', "nuget", HelpText = "Indicates whether to release any NuGet packages for the project.")]
 		public bool ReleaseOnNuGet { get; set; }
 		
+		[Option('p', "sfprojectweb", HelpText = "Indicates whether to publish website content via SourceForge's Project Web service.")]
+		public bool PublishSourceForgeProjectWeb { get; set; }
+		
 		[Option('s', "sourceforge", HelpText = "Indicates whether to release downloads via the SourceForge File Release System.")]
 		public bool ReleaseOnSourceForge { get; set; }
 		
-		[Option("webapidoc", HelpText = "Indicates whether to publish a web-based API documentation on the website (stable releases only).")]
+		[Option('t', "textchangelog", HelpText = "Indicates whether a plain text changelog is generated and included in releases.")]
+		public bool TextChangeLog { get; set; }
+		
+		[Option('w', "webapidoc", HelpText = "Indicates whether to publish a web-based API documentation on the website (stable releases only).")]
 		public bool WebApiDoc { get; set; }
 		
 		[Option("gitignore", HelpText = "If set, .gitignore files will be created.")]

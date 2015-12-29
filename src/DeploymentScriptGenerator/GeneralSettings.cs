@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 using System;
+using System.IO;
 
 namespace Deployment.ScriptGenerator
 {
@@ -62,6 +63,27 @@ namespace Deployment.ScriptGenerator
 			}
 		}
 		
+		public string PrepareToolDirectory()
+		{
+			string result = Path.Combine(basePath, options.ToolDirectory);
+			Directory.CreateDirectory(result);
+			return result;
+		}
+		
+		public string PrepareKeyDirectory()
+		{
+			string result = Path.Combine(basePath, options.KeyDirectory);
+			Directory.CreateDirectory(result);
+			return result;
+		}
+		
+		public string PreparePublicDirectory()
+		{
+			string result = Path.Combine(basePath, options.PublicDirectory);
+			Directory.CreateDirectory(result);
+			return result;
+		}
+		
 		private readonly GeneratorOptions options;
 		
 		public GeneratorOptions Options {
@@ -80,13 +102,13 @@ namespace Deployment.ScriptGenerator
 		
 		public bool SupportGithub {
 			get {
-				return options.ReleaseOnGithub;
+				return options.ReleaseOnGithub || options.PublishGithubPages;
 			}
 		}
 		
 		public bool SupportSourceForge {
 			get {
-				return options.ReleaseOnSourceForge;
+				return options.ReleaseOnSourceForge || options.PublishSourceForgeProjectWeb;
 			}
 		}
 		
@@ -96,7 +118,25 @@ namespace Deployment.ScriptGenerator
 			}
 		}
 		
+		public bool RequireLocalWebPath {
+			get {
+				return options.PublishGithubPages;
+			}
+		}
+		
 		public bool RequireXsltExtensions {
+			get {
+				return RequireXsltStringExtensions || RequireXsltJsonExtensions;
+			}
+		}
+		
+		public bool RequireXsltStringExtensions {
+			get {
+				return true; // always required for advancing the changelog
+			}
+		}
+		
+		public bool RequireXsltJsonExtensions {
 			get {
 				return false; // TODO
 			}
@@ -105,6 +145,12 @@ namespace Deployment.ScriptGenerator
 		public bool ProcessExampleProjects {
 			get {
 				return false; // TODO
+			}
+		}
+		
+		public string DefaultNamespaceUri {
+			get {
+				return "http://local/";
 			}
 		}
 	}

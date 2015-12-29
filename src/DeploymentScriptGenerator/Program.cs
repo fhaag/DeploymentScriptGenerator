@@ -23,6 +23,8 @@ THE SOFTWARE.
  */
 using System;
 
+using Deployment.ScriptGenerator.Resources;
+
 namespace Deployment.ScriptGenerator
 {
 	static class Program
@@ -48,6 +50,26 @@ namespace Deployment.ScriptGenerator
 				}
 				
 				NAntBuildScript.Write(settings);
+				ApiKeysTemplateFile.Write(settings);
+				
+				if (settings.Options.CreateProjectInfoFile) {
+					ProjectInfoFile.Write(settings);
+				}
+				
+				ResourceLoader.SaveAdvanceChangeLogXslt(settings);
+				if (settings.Options.WebChangeLog) {
+					ResourceLoader.SaveCreateHtmlChangeLogXslt(settings);
+				}
+				if (settings.Options.TextChangeLog) {
+					ResourceLoader.SaveCreateTextChangeLogXslt(settings);
+				}
+				
+				if (settings.RequireXsltStringExtensions) {
+					ResourceLoader.SaveXsltStringExtensionsFile(settings);
+				}
+				if (settings.RequireXsltJsonExtensions) {
+					ResourceLoader.SaveXsltJsonExtensionsFile(settings);
+				}
 			}
 			catch (Exception ex) {
 				Console.WriteLine(ex.ToString());
