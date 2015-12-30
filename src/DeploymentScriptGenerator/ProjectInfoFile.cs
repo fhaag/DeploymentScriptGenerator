@@ -78,7 +78,7 @@ namespace Deployment.ScriptGenerator
 			
 			w.WriteStartElement("downloads");
 			
-			//WriteReleaseBaseUrl(w, "CodePlex", settings.Options.ReleaseOnCodePlex, ""); // apparently no regular download ID available
+			//WriteReleaseBaseUrl(w, "CodePlex", settings.Options.ReleaseOnCodePlex, ""); // apparently no regular download URL available
 			WriteReleaseBaseUrl(w, "Github", settings.Options.ReleaseOnGithub, "https://github.com/TODO: user-or-org/TODO: repository/releases/download/v%VERSION%/%FILE%");
 			WriteReleaseBaseUrl(w, "SourceForge", settings.Options.ReleaseOnSourceForge, "http://sourceforge.net/projects/TODO: project/files/TODO: pretty project ID/%VERSION%/%FILE%/download");
 			

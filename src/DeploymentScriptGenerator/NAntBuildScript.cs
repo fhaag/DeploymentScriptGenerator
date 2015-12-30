@@ -153,6 +153,12 @@ namespace Deployment.ScriptGenerator
 				w.WriteEndElement();
 			}
 			
+			// release file names
+			
+			LoadReleaseFileName(settings, w, "src", "Source");
+			LoadReleaseFileName(settings, w, "bin", "Binary");
+			LoadReleaseFileName(settings, w, "chm", "Help");
+			
 			// script help output
 			
 			WriteHeadlineComment(w, "Documentation");
@@ -509,7 +515,7 @@ namespace Deployment.ScriptGenerator
 				
 				if (settings.Options.ReleaseOnCodePlex) {
 					w.WriteStartElement("call");
-					w.WriteAttributeString("target", "publish-codeplex-release");
+					w.WriteAttributeString("target", "publish-CodePlex-release");
 					w.WriteEndElement();
 				}
 				
@@ -585,11 +591,71 @@ namespace Deployment.ScriptGenerator
 			}
 			
 			if (settings.Options.ReleaseOnSourceForge) {
+				StartTarget(w, "publish-sourceforge-frs");
 				
+				var args = new List<string>() {
+					"/c",
+					"WinSCP",
+					"/console",
+					"/command",
+					WINSCP_SF_CONNECTION_COMMAND,
+					"option batch continue",
+					"option confirm off",
+					"cd /home/frs/project/${project.SourceForgeId}/${project.prettyId}"
+				};
+				if (settings.Options.TextChangeLog) {
+					args.Add("put changelog.txt");
+				}
+				args.Add("mkdir ${release.version}/");
+				args.Add("put readme.txt ${release.version}/");
+				args.Add("put *.tar.gz ${release.version}/"); // TODO: adapt extension
+				args.Add("close");
+				args.Add("exit");
+				
+				ExecuteProgram(w, "cmd", settings.Options.ReleaseDirectory,
+				               args.ToArray());
+				
+				w.WriteEndElement();
 			}
 			
 			if (settings.Options.ReleaseOnCodePlex) {
+				StartTarget(w, "publish-Codeplex-release",
+				            "build-deployment-libs");
 				
+				w.WriteStartElement("script");
+				w.WriteAttributeString("language", "c#");
+				w.WriteStartElement("references");
+				w.WriteStartElement("include");
+				w.WriteAttributeString("name", "bin/build/deployment/CodePlexDeployment.dll");
+				w.WriteEndElement();
+				w.WriteEndElement();
+				w.WriteStartElement("imports");
+				w.WriteStartElement("import");
+				w.WriteAttributeString("namespace", "System.IO");
+				w.WriteEndElement();
+				w.WriteEndElement();
+				w.WriteStartElement("code");
+				
+				{
+					var githubDeploymentCode = new System.Text.StringBuilder();
+					githubDeploymentCode.AppendLine();
+					githubDeploymentCode.AppendLine("public static void ScriptMain(Project project)");
+					githubDeploymentCode.AppendLine("{");
+					githubDeploymentCode.AppendLine("	Deployment.CodePlex.Worker.Publish(Path.Combine(project.BaseDirectory, \"" + settings.Options.PublicDirectory + "\", \"" + settings.Options.ProjectInfoFile + "\"),");
+					githubDeploymentCode.AppendLine("	                                   Path.Combine(project.BaseDirectory, \"" + settings.Options.ReleaseDirectory + "\"),");
+					githubDeploymentCode.AppendLine("	                                   project.Properties[\"release.version\"],");
+					githubDeploymentCode.AppendLine("	                                   project.Properties[\"internal.userFriendlyDate\"],");
+					githubDeploymentCode.AppendLine("	                                   project.Properties[\"internal.isoDate\"],");
+					githubDeploymentCode.AppendLine("	                                   project.Properties[\"internal.CodePlexUser\"],");
+					githubDeploymentCode.AppendLine("	                                   project.Properties[\"internal.CodePlexPW\"]);");
+					githubDeploymentCode.AppendLine("}");
+					w.WriteCData(githubDeploymentCode.ToString());
+				}
+				
+				w.WriteEndElement();
+				w.WriteEndElement();
+				
+				w.WriteEndElement();
 			}
 			
 			if (settings.Options.ReleaseOnNuGet) {
@@ -627,7 +693,7 @@ namespace Deployment.ScriptGenerator
 						WINSCP_SF_CONNECTION_COMMAND,
 						"option batch continue",
 						"option confirm off",
-						"cd /home/project-web/${project.SFProject}/htdocs"
+						"cd /home/project-web/${project.SourceForgeId}/htdocs"
 					};
 					
 					if (settings.Options.WebChangeLog) {
@@ -657,14 +723,14 @@ namespace Deployment.ScriptGenerator
 						w.WriteEndElement();
 						
 						ExecuteProgram(w, "cmd", null,
-						               "/c", "plink", "-ssh", "-l", "${internal.SFUser},${project.SFProject}", "-i", "${internal.SFSSHKey}", "shell.sourceforge.net", "create");
+						               "/c", "plink", "-ssh", "-l", "${internal.SFUser},${project.SourceForgeId}", "-i", "${internal.SFSSHKey}", "shell.sourceforge.net", "create");
 						
 						w.WriteStartElement("sleep");
 						w.WriteAttributeString("seconds", "30");
 						w.WriteEndElement();
 						
 						ExecuteProgram(w, "cmd", null,
-						               "/c", "plink", "-ssh", "-l", "${internal.SFUser},${project.SFProject}", "-i", "${internal.SFSSHKey}", "shell.sourceforge.net", "(cd /home/project-web/${project.SFProject}/htdocs/newapi && tar -xf webapidoc.tar.gz && mv Index.html index.html && cd .. && mv api oldapi && mv newapi api && rm -r oldapi) || echo 'The SSH session was not successful.' ; shutdown");
+						               "/c", "plink", "-ssh", "-l", "${internal.SFUser},${project.SourceForgeId}", "-i", "${internal.SFSSHKey}", "shell.sourceforge.net", "(cd /home/project-web/${project.SourceForgeId}/htdocs/newapi && tar -xf webapidoc.tar.gz && mv Index.html index.html && cd .. && mv api oldapi && mv newapi api && rm -r oldapi) || echo 'The SSH session was not successful.' ; shutdown");
 					}
 				}
 				
@@ -803,6 +869,21 @@ namespace Deployment.ScriptGenerator
 		
 		private static void PackDownloadFile(GeneralSettings settings, XmlWriter w, DownloadPackage package, ArchiveType format)
 		{
+			string archiveFileName;
+			switch (package) {
+				case DownloadPackage.Binaries:
+					archiveFileName = "${internal.BinaryReleaseName}";
+					break;
+				case DownloadPackage.Sources:
+					archiveFileName = "${internal.SourceReleaseName}";
+					break;
+				case DownloadPackage.ApiDocumentation:
+					archiveFileName = "${internal.HelpReleaseName}";
+					break;
+				default:
+					throw new InvalidEnumArgumentException("package", (int)package, typeof(DownloadPackage));
+			}
+			
 			switch (format) {
 				case ArchiveType.Zip:
 					w.WriteStartElement("zip");
@@ -822,7 +903,12 @@ namespace Deployment.ScriptGenerator
 				default:
 					throw new InvalidEnumArgumentException("format", (int)format, typeof(ArchiveType));
 			}
-			// TODO: destination file name
+			
+			if (format == ArchiveType.Zip) {
+				w.WriteAttributeString("zipfile", archiveFileName + format.GetFileExtension());
+			} else {
+				w.WriteAttributeString("destfile", archiveFileName + format.GetFileExtension());
+			}
 			
 			switch (package) {
 				case DownloadPackage.Binaries:
@@ -971,7 +1057,7 @@ namespace Deployment.ScriptGenerator
 			XmlPeek(w, settings.Options.KeyDirectory + "/apikeys.xml", "/keys/key[@id = '" + id + "']/@value", property);
 		}
 		
-		private const string WINSCP_SF_CONNECTION_COMMAND = "\"open sftp://${internal.SFUser},${project.SFProject}@web.sourceforge.net \"\"-privatekey=${internal.SFSSHKey}\"\"\"";
+		private const string WINSCP_SF_CONNECTION_COMMAND = "\"open sftp://${internal.SFUser},${project.SourceForgeId}@web.sourceforge.net \"\"-privatekey=${internal.SFSSHKey}\"\"\"";
 		
 		private static void WriteWebApiDocFileset(XmlWriter w)
 		{
@@ -990,6 +1076,35 @@ namespace Deployment.ScriptGenerator
 			w.WriteAttributeString("name", "*.chw");
 			w.WriteEndElement();
 			w.WriteEndElement();
+		}
+		
+		private static void LoadReleaseFileName(GeneralSettings settings, XmlWriter w, string shortId, string longId)
+		{
+			XmlPeek(w, settings.Options.PublicDirectory + "/" + settings.Options.ProjectInfoFile, "/project/downloads/file[@type = '" + shortId + "']/text()", "internal.Raw" + longId + "ReleaseName");
+			
+			string nameProp = "internal." + longId + "ReleaseName";
+			
+			w.WriteStartElement("property");
+			w.WriteAttributeString("name", nameProp);
+			w.WriteAttributeString("value", "${" + StringSubstitutionChain(nameProp,
+			                                                               "VERSION", "release.version",
+			                                                               "DATE", "internal.userFriendlyDate") + "}");
+			w.WriteAttributeString("overwrite", "false");
+			w.WriteEndElement();
+		}
+		
+		private static string StringSubstitutionChain(string original, params string[] pairs)
+		{
+			if (pairs.Length % 2 != 0) {
+				throw new ArgumentException("There must be an even number of pairs.");
+			}
+			
+			var result = new System.Text.StringBuilder(original);
+			for (int i = 0; i < pairs.Length; i += 2) {
+				result.Insert(0, "string::replace(");
+				result.Append(", '%" + pairs[i] + "%', " + pairs[i + 1] + ")");
+			}
+			return result.ToString();
 		}
 	}
 }
