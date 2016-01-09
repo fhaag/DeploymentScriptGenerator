@@ -176,7 +176,7 @@ namespace Deployment.ScriptGenerator
 		
 		public bool ProcessExampleProjects {
 			get {
-				return false; // TODO
+				return options.ProcessExampleProjects;
 			}
 		}
 		

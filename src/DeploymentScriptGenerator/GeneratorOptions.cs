@@ -30,8 +30,6 @@ namespace Deployment.ScriptGenerator
 {
 	internal class GeneratorOptions
 	{
-		// TODO: example projects
-		
 		[Option('P', "githubpages", HelpText = "Indicates whether to publish website content via Github Pages.")]
 		public bool PublishGithubPages { get; set; }
 		
@@ -68,6 +66,9 @@ namespace Deployment.ScriptGenerator
 		[Option('w', "webapidoc", HelpText = "Indicates whether to publish a web-based API documentation on the website (stable releases only).")]
 		public bool WebApiDoc { get; set; }
 		
+		[Option('x', "exampleprojects", HelpText = "Indicates whether example projects are considered.")]
+		public bool ProcessExampleProjects { get; set; }
+		
 		[Option("gitignore", HelpText = "If set, .gitignore files will be created.")]
 		public bool CreateGitIgnoreFile { get; set; }
 		
@@ -91,6 +92,9 @@ namespace Deployment.ScriptGenerator
 		
 		[Option("keydir", DefaultValue = "keys", HelpText = "Name of the folder that stores keys and access credentials.")]
 		public string KeyDirectory { get; set; }
+		
+		[Option("exampledir", DefaultValue = "Samples", HelpText = "Name of the folder that stores example projects. This must be a subdirectory of the sources directory.")]
+		public string ExampleDirectory { get; set; }
 		
 		[Option("sourceforgeformat", DefaultValue = "", HelpText = "The format for downloadable files on SourceForge. An empty string uses the default from 'format', otherwise overrides 'format'.")]
 		public string SourceForgeFormat { get; set; }
