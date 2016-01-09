@@ -1,7 +1,7 @@
 ﻿/*
 This source file is a part of DeploymentScriptGenerator.
 
-Copyright (c) 2015 Florian Haag
+Copyright (c) 2015 - 2016 Florian Haag
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Deployment.ScriptGenerator
 {
@@ -34,22 +36,17 @@ namespace Deployment.ScriptGenerator
 				throw new ArgumentNullException("options");
 			}
 			
-			switch (options.DownloadFormat.ToLowerInvariant()) {
-				case "zip":
-					downloadFormat = ArchiveType.Zip;
-					break;
-				case "tar":
-					downloadFormat = ArchiveType.Tar;
-					break;
-				case "tgz":
-					downloadFormat = ArchiveType.TarGz;
-					break;
-				case "tbz":
-					downloadFormat = ArchiveType.TarBz2;
-					break;
-				default:
-					throw new ArgumentException("Invalid download format: " + options.DownloadFormat);
-			}
+			var fmt = ArchiveTypeUtilities.StringToArchiveType(options.DownloadFormat);
+			this.downloadFormat = fmt.HasValue ? fmt.Value : ArchiveType.Zip;
+			
+			fmt = ArchiveTypeUtilities.StringToArchiveType(options.SourceForgeFormat);
+			this.sourceForgeDownloadFormat = fmt.HasValue ? fmt.Value : this.downloadFormat;
+			
+			fmt = ArchiveTypeUtilities.StringToArchiveType(options.CodePlexFormat);
+			this.codePlexDownloadFormat = fmt.HasValue ? fmt.Value : this.downloadFormat;
+			
+			fmt = ArchiveTypeUtilities.StringToArchiveType(options.GithubFormat);
+			this.githubDownloadFormat = fmt.HasValue ? fmt.Value : this.downloadFormat;
 			
 			this.options = options;
 			this.basePath = Environment.CurrentDirectory;
@@ -97,6 +94,41 @@ namespace Deployment.ScriptGenerator
 		public ArchiveType DownloadFormat {
 			get {
 				return downloadFormat;
+			}
+		}
+		
+		private readonly ArchiveType sourceForgeDownloadFormat;
+		
+		public ArchiveType SourceForgeDownloadFormat {
+			get {
+				return sourceForgeDownloadFormat;
+			}
+		}
+		
+		private readonly ArchiveType codePlexDownloadFormat;
+		
+		public ArchiveType CodePlexDownloadFormat {
+			get {
+				return codePlexDownloadFormat;
+			}
+		}
+		
+		private readonly ArchiveType githubDownloadFormat;
+		
+		public ArchiveType GithubDownloadFormat {
+			get {
+				return githubDownloadFormat;
+			}
+		}
+		
+		public IEnumerable<ArchiveType> AllDownloadFormats {
+			get {
+				var allFormats = new HashSet<ArchiveType>();
+				allFormats.Add(this.downloadFormat);
+				allFormats.Add(this.sourceForgeDownloadFormat);
+				allFormats.Add(this.codePlexDownloadFormat);
+				allFormats.Add(this.githubDownloadFormat);
+				return allFormats.ToArray();
 			}
 		}
 		

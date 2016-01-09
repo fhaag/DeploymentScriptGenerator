@@ -65,7 +65,7 @@ namespace Deployment.ScriptGenerator
 			if (settings.RequireLocalWebPath) {
 				WriteEntry(w, "localWebPath", "relative path from project to working copy of website repository");
 			}
-			if (settings.Options.ReleaseOnSourceForge || settings.Options.PublishSourceForgeProjectWeb) { // TODO: alternatively, if SF website is required
+			if (settings.Options.ReleaseOnSourceForge || settings.Options.PublishSourceForgeProjectWeb) {
 				WriteEntry(w, "SourceForgeAPI", "SourceForge API key");
 				WriteEntry(w, "SourceForgeUser", "SourceForge user name");
 				WriteEntry(w, "SourceForgeSSH", "path to private SourceForge SSH key file");

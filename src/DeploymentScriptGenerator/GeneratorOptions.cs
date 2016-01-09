@@ -1,7 +1,7 @@
 ﻿/*
 This source file is a part of DeploymentScriptGenerator.
 
-Copyright (c) 2015 Florian Haag
+Copyright (c) 2015 - 2016 Florian Haag
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -91,6 +91,15 @@ namespace Deployment.ScriptGenerator
 		
 		[Option("keydir", DefaultValue = "keys", HelpText = "Name of the folder that stores keys and access credentials.")]
 		public string KeyDirectory { get; set; }
+		
+		[Option("sourceforgeformat", DefaultValue = "", HelpText = "The format for downloadable files on SourceForge. An empty string uses the default from 'format', otherwise overrides 'format'.")]
+		public string SourceForgeFormat { get; set; }
+		
+		[Option("codeplexformat", DefaultValue = "", HelpText = "The format for downloadable files on CodePlex. An empty string uses the default from 'format', otherwise overrides 'format'.")]
+		public string CodePlexFormat { get; set; }
+		
+		[Option("githubformat", DefaultValue = "", HelpText = "The format for downloadable files on Github. An empty string uses the default from 'format', otherwise overrides 'format'.")]
+		public string GithubFormat { get; set; }
 		
 		[HelpOption]
 		public string GetUsage()

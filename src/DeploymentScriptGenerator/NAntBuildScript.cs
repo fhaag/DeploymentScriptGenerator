@@ -419,10 +419,12 @@ namespace Deployment.ScriptGenerator
 					w.WriteEndElement();
 				}
 				
-				PackDownloadFile(settings, w, DownloadPackage.Binaries, settings.DownloadFormat);
-				PackDownloadFile(settings, w, DownloadPackage.Sources, settings.DownloadFormat);
-				if (settings.Options.ReleaseApiDoc) {
-					PackDownloadFile(settings, w, DownloadPackage.ApiDocumentation, settings.DownloadFormat);
+				foreach (var fmt in settings.AllDownloadFormats) {
+					PackDownloadFile(settings, w, DownloadPackage.Binaries, fmt);
+					PackDownloadFile(settings, w, DownloadPackage.Sources, fmt);
+					if (settings.Options.ReleaseApiDoc) {
+						PackDownloadFile(settings, w, DownloadPackage.ApiDocumentation, fmt);
+					}
 				}
 				
 				CopyFile(w, settings.Options.TemporaryDirectory + "/readme/readme.txt", settings.Options.ReleaseDirectory + "/readme.txt");
@@ -608,7 +610,7 @@ namespace Deployment.ScriptGenerator
 				}
 				args.Add("mkdir ${release.version}/");
 				args.Add("put readme.txt ${release.version}/");
-				args.Add("put *.tar.gz ${release.version}/"); // TODO: adapt extension
+				args.Add("put *" + settings.SourceForgeDownloadFormat.GetFileExtension() + " ${release.version}/");
 				args.Add("close");
 				args.Add("exit");
 				

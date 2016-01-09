@@ -1,7 +1,7 @@
 ﻿/*
 This source file is a part of DeploymentScriptGenerator.
 
-Copyright (c) 2015 Florian Haag
+Copyright (c) 2015 - 2016 Florian Haag
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -41,6 +41,28 @@ namespace Deployment.ScriptGenerator
 					return ".zip";
 				default:
 					throw new InvalidEnumArgumentException("archiveType", (int)archiveType, typeof(ArchiveType));
+			}
+		}
+		
+		public static ArchiveType? StringToArchiveType(string text)
+		{
+			if (text == null) {
+				return null;
+			}
+			
+			switch (text.ToLowerInvariant()) {
+				case "zip":
+					return ArchiveType.Zip;
+				case "tar":
+					return ArchiveType.Tar;
+				case "tgz":
+					return ArchiveType.TarGz;
+				case "tbz":
+					return ArchiveType.TarBz2;
+				case "":
+					return null;
+				default:
+					throw new ArgumentException("Invalid download format: " + text);
 			}
 		}
 	}
