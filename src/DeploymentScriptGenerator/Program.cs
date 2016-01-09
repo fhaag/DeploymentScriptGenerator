@@ -1,7 +1,7 @@
 ﻿/*
 This source file is a part of DeploymentScriptGenerator.
 
-Copyright (c) 2015 Florian Haag
+Copyright (c) 2015 - 2016 Florian Haag
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -69,6 +69,10 @@ namespace Deployment.ScriptGenerator
 				}
 				if (settings.RequireXsltJsonExtensions) {
 					ResourceLoader.SaveXsltJsonExtensionsFile(settings);
+				}
+				
+				if (settings.Options.CreateGitIgnoreFile) {
+					GitIgnoreWriter.WriteIgnoreFile(settings);
 				}
 			}
 			catch (Exception ex) {

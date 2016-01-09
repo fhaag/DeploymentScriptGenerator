@@ -66,6 +66,7 @@
     <Compile Include="DownloadPackage.cs" />
     <Compile Include="GeneralSettings.cs" />
     <Compile Include="GeneratorOptions.cs" />
+    <Compile Include="GitIgnoreWriter.cs" />
     <Compile Include="NAntBuildScript.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInfoFile.cs" />

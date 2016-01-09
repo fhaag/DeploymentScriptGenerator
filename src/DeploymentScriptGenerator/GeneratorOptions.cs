@@ -30,6 +30,9 @@ namespace Deployment.ScriptGenerator
 {
 	internal class GeneratorOptions
 	{
+		[Option('I', "gitignore", HelpText = "If set, .gitignore files will be created.")]
+		public bool CreateGitIgnoreFile { get; set; }
+		
 		[Option('P', "githubpages", HelpText = "Indicates whether to publish website content via Github Pages.")]
 		public bool PublishGithubPages { get; set; }
 		
@@ -68,9 +71,6 @@ namespace Deployment.ScriptGenerator
 		
 		[Option('x', "exampleprojects", HelpText = "Indicates whether example projects are considered.")]
 		public bool ProcessExampleProjects { get; set; }
-		
-		[Option("gitignore", HelpText = "If set, .gitignore files will be created.")]
-		public bool CreateGitIgnoreFile { get; set; }
 		
 		[Option("buildfile", DefaultValue = "release.build", HelpText = "Name of the main build file.")]
 		public string BuildFile { get; set; }
