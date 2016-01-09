@@ -86,6 +86,10 @@ namespace Deployment.ScriptGenerator
 			
 			mainFile.Add("/bin",
 			             "/release");
+			if (settings.Options.MinimalMode) {
+				mainFile.Add("/release.build");
+				mainFile.Add("/" + settings.Options.ToolDirectory);
+			}
 			
 			sourcesFile.Add("bin/",
 			                "obj/",

@@ -33,6 +33,9 @@ namespace Deployment.ScriptGenerator
 		[Option('I', "gitignore", HelpText = "If set, .gitignore files will be created.")]
 		public bool CreateGitIgnoreFile { get; set; }
 		
+		[Option('M', "minimal", HelpText = "Ensures that a minimal amount of files will be left in the repository. Instead of keeping build script files, the Deployment Script Generator tool is expected to be available on any machine used to prepare and deploy releases.")]
+		public bool MinimalMode { get; set; }
+		
 		[Option('P', "githubpages", HelpText = "Indicates whether to publish website content via Github Pages.")]
 		public bool PublishGithubPages { get; set; }
 		
