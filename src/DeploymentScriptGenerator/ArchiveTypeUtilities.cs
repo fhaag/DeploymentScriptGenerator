@@ -65,5 +65,21 @@ namespace Deployment.ScriptGenerator
 					throw new ArgumentException("Invalid download format: " + text);
 			}
 		}
+		
+		public static string ArchiveTypeToString(this ArchiveType archiveType)
+		{
+			switch (archiveType) {
+				case ArchiveType.Tar:
+					return "tar";
+				case ArchiveType.TarBz2:
+					return "tbz";
+				case ArchiveType.TarGz:
+					return "tgz";
+				case ArchiveType.Zip:
+					return "zip";
+				default:
+					throw new InvalidEnumArgumentException("archiveType", (int)archiveType, typeof(ArchiveType));
+			}
+		}
 	}
 }

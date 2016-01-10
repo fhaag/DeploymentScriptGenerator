@@ -30,76 +30,122 @@ namespace Deployment.ScriptGenerator
 {
 	internal class GeneratorOptions
 	{
-		[Option('B', "batchfiles", HelpText = "If set, batch files for easier invocation of the deployment script will be created.")]
+		public const char CREATE_BATCH_FILES_FLAG = 'B';
+		
+		[Option(CREATE_BATCH_FILES_FLAG, "batchfiles", HelpText = "If set, batch files for easier invocation of the deployment script will be created.")]
 		public bool CreateBatchFiles { get; set; }
 		
-		[Option('I', "gitignore", HelpText = "If set, .gitignore files will be created.")]
+		public const char CREATE_GIT_IGNORE_FILE_FLAG = 'I';
+		
+		[Option(CREATE_GIT_IGNORE_FILE_FLAG, "gitignore", HelpText = "If set, .gitignore files will be created.")]
 		public bool CreateGitIgnoreFile { get; set; }
 		
-		[Option('M', "minimal", HelpText = "Ensures that a minimal amount of files will be left in the repository. Instead of keeping build script files, the Deployment Script Generator tool is expected to be available on any machine used to prepare and deploy releases.")]
+		public const char MINIMAL_MODE_FLAG = 'M';
+		
+		[Option(MINIMAL_MODE_FLAG, "minimal", HelpText = "Ensures that a minimal amount of files will be left in the repository. Instead of keeping build script files, the Deployment Script Generator tool is expected to be available on any machine used to prepare and deploy releases. It is recommended to use this flag in combination with the 'scriptcreationbatch' option.")]
 		public bool MinimalMode { get; set; }
 		
-		[Option('P', "githubpages", HelpText = "Indicates whether to publish website content via Github Pages.")]
+		public const char PUBLISH_GITHUB_PAGES_FLAG = 'P';
+		
+		[Option(PUBLISH_GITHUB_PAGES_FLAG, "githubpages", HelpText = "Indicates whether to publish website content via Github Pages.")]
 		public bool PublishGithubPages { get; set; }
 		
-		[Option('W', "sfprojectweb", HelpText = "Indicates whether to publish website content via SourceForge's Project Web service.")]
+		public const char PUBLISH_SOURCE_FORGE_PROJECT_WEB_FLAG = 'W';
+		
+		[Option(PUBLISH_SOURCE_FORGE_PROJECT_WEB_FLAG, "sfprojectweb", HelpText = "Indicates whether to publish website content via SourceForge's Project Web service.")]
 		public bool PublishSourceForgeProjectWeb { get; set; }
 		
-		[Option('a', "apidoc", HelpText = "Indicates whether to release a downloadable API documentation.")]
+		public const char RELEASE_API_DOC_FLAG = 'a';
+		
+		[Option(RELEASE_API_DOC_FLAG, "apidoc", HelpText = "Indicates whether to release a downloadable API documentation.")]
 		public bool ReleaseApiDoc { get; set; }
 		
-		[Option('c', "codeplex", HelpText = "Indicates whether to release downloads as CodePlex releases.")]
+		public const char RELEASE_ON_CODE_PLEX_FLAG = 'c';
+		
+		[Option(RELEASE_ON_CODE_PLEX_FLAG, "codeplex", HelpText = "Indicates whether to release downloads as CodePlex releases.")]
 		public bool ReleaseOnCodePlex { get; set; }
 		
 		[Option('f', "format", DefaultValue = "zip", HelpText = "The default format for downloadable files (can be zip, tar, tgz, or tbz).")]
 		public string DownloadFormat { get; set; }
 		
-		[Option('g', "github", HelpText = "Indicates whether to release downloads via the Github release feature.")]
+		public const char RELEASE_ON_GITHUB_FLAG = 'g';
+		
+		[Option(RELEASE_ON_GITHUB_FLAG, "github", HelpText = "Indicates whether to release downloads via the Github release feature.")]
 		public bool ReleaseOnGithub { get; set; }
 		
-		[Option('i', "projectinfo", HelpText = "If set, a blank project info file will be created.")]
+		public const char CREATE_PROJECT_INFO_FILE = 'i';
+		
+		[Option(CREATE_PROJECT_INFO_FILE, "projectinfo", HelpText = "If set, a blank project info file will be created.")]
 		public bool CreateProjectInfoFile { get; set; }
 		
-		[Option('l', "webchangelog", HelpText = "Indicates whether an HTML changelog is generated and uploaded to the website.")]
+		public const char WEB_CHANGE_LOG_FLAG = 'l';
+		
+		[Option(WEB_CHANGE_LOG_FLAG, "webchangelog", HelpText = "Indicates whether an HTML changelog is generated and uploaded to the website.")]
 		public bool WebChangeLog { get; set; }
 		
-		[Option('n', "nuget", HelpText = "Indicates whether to release any NuGet packages for the project.")]
+		public const char RELEASE_ON_NU_GET_FLAG = 'n';
+		
+		[Option(RELEASE_ON_NU_GET_FLAG, "nuget", HelpText = "Indicates whether to release any NuGet packages for the project.")]
 		public bool ReleaseOnNuGet { get; set; }
 		
-		[Option('s', "sourceforge", HelpText = "Indicates whether to release downloads via the SourceForge File Release System.")]
+		public const char RELEASE_ON_SOURCE_FORGE_FLAG = 's';
+		
+		[Option(RELEASE_ON_SOURCE_FORGE_FLAG, "sourceforge", HelpText = "Indicates whether to release downloads via the SourceForge File Release System.")]
 		public bool ReleaseOnSourceForge { get; set; }
 		
-		[Option('t', "textchangelog", HelpText = "Indicates whether a plain text changelog is generated and included in releases.")]
+		public const char TEXT_CHANGE_LOG_FLAG = 't';
+		
+		[Option(TEXT_CHANGE_LOG_FLAG, "textchangelog", HelpText = "Indicates whether a plain text changelog is generated and included in releases.")]
 		public bool TextChangeLog { get; set; }
 		
-		[Option('w', "webapidoc", HelpText = "Indicates whether to publish a web-based API documentation on the website (stable releases only).")]
+		public const char WEB_API_DOC_FLAG = 'w';
+		
+		[Option(WEB_API_DOC_FLAG, "webapidoc", HelpText = "Indicates whether to publish a web-based API documentation on the website (stable releases only).")]
 		public bool WebApiDoc { get; set; }
 		
-		[Option('x', "exampleprojects", HelpText = "Indicates whether example projects are considered.")]
+		public const char PROCESS_EXAMPLE_PROJECTS_FLAG = 'x';
+		
+		[Option(PROCESS_EXAMPLE_PROJECTS_FLAG, "exampleprojects", HelpText = "Indicates whether example projects are considered.")]
 		public bool ProcessExampleProjects { get; set; }
 		
-		[Option("buildfile", DefaultValue = "release.build", HelpText = "Name of the main build file.")]
+		public const string DEFAULT_BUILD_FILE = "release.build";
+		
+		[Option("buildfile", DefaultValue = DEFAULT_BUILD_FILE, HelpText = "Name of the main build file.")]
 		public string BuildFile { get; set; }
 		
-		[Option("publicdir", DefaultValue = "pubinfo", HelpText = "Name of the folder for public project information.")]
+		public const string DEFAULT_PUBLIC_DIR = "pubinfo";
+		
+		[Option("publicdir", DefaultValue = DEFAULT_PUBLIC_DIR, HelpText = "Name of the folder for public project information.")]
 		public string PublicDirectory { get; set; }
 		
-		[Option("projectinfofile", DefaultValue = "projectinfo.xml", HelpText = "Name of the project information file.")]
+		public const string DEFAULT_PROJECT_INFO_FILE = "projectinfo.xml";
+		
+		[Option("projectinfofile", DefaultValue = DEFAULT_PROJECT_INFO_FILE, HelpText = "Name of the project information file.")]
 		public string ProjectInfoFile { get; set; }
 		
-		[Option("toolsdir", DefaultValue = "tools", HelpText = "Name of the folder for build support files.")]
+		public const string DEFAULT_TOOLS_DIR = "tools";
+		
+		[Option("toolsdir", DefaultValue = DEFAULT_TOOLS_DIR, HelpText = "Name of the folder for build support files.")]
 		public string ToolDirectory { get; set; }
 		
-		[Option("tempdir", DefaultValue = "buildtmp", HelpText = "Name of the folder for temporary files created during the build process.")]
+		public const string DEFAULT_TEMPORARY_DIR = "buildtmp";
+		
+		[Option("tempdir", DefaultValue = DEFAULT_TEMPORARY_DIR, HelpText = "Name of the folder for temporary files created during the build process.")]
 		public string TemporaryDirectory { get; set; }
 		
-		[Option("releasedir", DefaultValue = "release", HelpText = "Name of the folder that receives the final release files.")]
+		public const string DEFAULT_RELEASE_DIR = "release";
+		
+		[Option("releasedir", DefaultValue = DEFAULT_RELEASE_DIR, HelpText = "Name of the folder that receives the final release files.")]
 		public string ReleaseDirectory { get; set; }
 		
-		[Option("keydir", DefaultValue = "keys", HelpText = "Name of the folder that stores keys and access credentials.")]
+		public const string DEFAULT_KEY_DIR = "keys";
+		
+		[Option("keydir", DefaultValue = DEFAULT_KEY_DIR, HelpText = "Name of the folder that stores keys and access credentials.")]
 		public string KeyDirectory { get; set; }
 		
-		[Option("exampledir", DefaultValue = "Samples", HelpText = "Name of the folder that stores example projects. This must be a subdirectory of the sources directory.")]
+		public const string DEFAULT_EXAMPLE_DIR = "Samples";
+		
+		[Option("exampledir", DefaultValue = DEFAULT_EXAMPLE_DIR, HelpText = "Name of the folder that stores example projects. This must be a subdirectory of the sources directory.")]
 		public string ExampleDirectory { get; set; }
 		
 		[Option("sourceforgeformat", DefaultValue = "", HelpText = "The format for downloadable files on SourceForge. An empty string uses the default from 'format', otherwise overrides 'format'.")]
@@ -110,6 +156,9 @@ namespace Deployment.ScriptGenerator
 		
 		[Option("githubformat", DefaultValue = "", HelpText = "The format for downloadable files on Github. An empty string uses the default from 'format', otherwise overrides 'format'.")]
 		public string GithubFormat { get; set; }
+		
+		[Option("scriptcreationbatch", HelpText = "Indicates whether a batch file for creating the deployment scripts should be created. Only effective in minimal mode.")]
+		public bool CreateScriptCreationBatchFile { get; set; }
 		
 		[HelpOption]
 		public string GetUsage()
