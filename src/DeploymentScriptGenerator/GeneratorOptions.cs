@@ -30,6 +30,9 @@ namespace Deployment.ScriptGenerator
 {
 	internal class GeneratorOptions
 	{
+		[Option('B', "batchfiles", HelpText = "If set, batch files for easier invocation of the deployment script will be created.")]
+		public bool CreateBatchFiles { get; set; }
+		
 		[Option('I', "gitignore", HelpText = "If set, .gitignore files will be created.")]
 		public bool CreateGitIgnoreFile { get; set; }
 		

@@ -74,6 +74,10 @@ namespace Deployment.ScriptGenerator
 				if (settings.Options.CreateGitIgnoreFile) {
 					GitIgnoreWriter.WriteIgnoreFile(settings);
 				}
+				
+				if (settings.Options.CreateBatchFiles) {
+					BatchCreator.WriteBatchFiles(settings);
+				}
 			}
 			catch (Exception ex) {
 				Console.WriteLine(ex.ToString());

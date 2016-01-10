@@ -63,6 +63,7 @@
     <Compile Include="ApiKeysTemplateFile.cs" />
     <Compile Include="ArchiveType.cs" />
     <Compile Include="ArchiveTypeUtilities.cs" />
+    <Compile Include="BatchCreator.cs" />
     <Compile Include="DownloadPackage.cs" />
     <Compile Include="GeneralSettings.cs" />
     <Compile Include="GeneratorOptions.cs" />
