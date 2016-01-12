@@ -46,6 +46,9 @@
     <Reference Include="CommandLine">
       <HintPath>..\packages\CommandLineParser.1.9.71\lib\net40\CommandLine.dll</HintPath>
     </Reference>
+    <Reference Include="dotless.ClientOnly">
+      <HintPath>..\packages\DotlessClientOnly.1.5.2\lib\dotless.ClientOnly.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -64,6 +67,7 @@
     <Compile Include="ArchiveType.cs" />
     <Compile Include="ArchiveTypeUtilities.cs" />
     <Compile Include="BatchCreator.cs" />
+    <Compile Include="CssWriter.cs" />
     <Compile Include="DownloadPackage.cs" />
     <Compile Include="ExternalSite.cs" />
     <Compile Include="ExternalSiteUtilities.cs" />
@@ -98,6 +102,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Code\ExampleProjects.xsl">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.ExampleProjectsXslt</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Code\changelog.less">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.ChangeLogCSS</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

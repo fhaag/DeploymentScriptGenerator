@@ -88,6 +88,10 @@ namespace Deployment.ScriptGenerator
 					creationBatchCommand.Append(" --projectinfofile \"" + settings.Options.ProjectInfoFile + "\"");
 				}
 				
+				if (settings.Options.PrimaryColor != GeneratorOptions.DEFAULT_PRIMARY_COLOR) {
+					creationBatchCommand.Append(" --primarycolor " + settings.Options.PrimaryColor);
+				}
+				
 				File.WriteAllText(Path.Combine(settings.BasePath, "createdeploymentscript.bat"), creationBatchCommand.ToString());
 			}
 		}
@@ -136,6 +140,10 @@ namespace Deployment.ScriptGenerator
 			
 			if (settings.Options.ProcessExampleProjects) {
 				result.Add(GeneratorOptions.PROCESS_EXAMPLE_PROJECTS_FLAG);
+			}
+			
+			if (settings.Options.CreateStyleSheets) {
+				result.Add(GeneratorOptions.CREATE_STYLE_SHEETS_FLAG);
 			}
 			
 			return result;

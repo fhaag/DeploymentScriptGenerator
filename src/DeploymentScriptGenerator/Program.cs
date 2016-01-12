@@ -40,6 +40,8 @@ namespace Deployment.ScriptGenerator
 					}
 				}
 				
+				options.Sanitize();
+				
 				GeneralSettings settings;
 				try {
 					settings = new GeneralSettings(options);
@@ -59,6 +61,7 @@ namespace Deployment.ScriptGenerator
 				ResourceLoader.SaveAdvanceChangeLogXslt(settings);
 				if (settings.Options.WebChangeLog) {
 					ResourceLoader.SaveCreateHtmlChangeLogXslt(settings);
+					CssWriter.WriteChangeLogStyle(settings);
 				}
 				if (settings.Options.TextChangeLog) {
 					ResourceLoader.SaveCreateTextChangeLogXslt(settings);

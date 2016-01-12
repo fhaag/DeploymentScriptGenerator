@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 using System;
+using System.Text.RegularExpressions;
 
 using CommandLine;
 using CommandLine.Text;
@@ -34,6 +35,11 @@ namespace Deployment.ScriptGenerator
 		
 		[Option(CREATE_BATCH_FILES_FLAG, "batchfiles", HelpText = "If set, batch files for easier invocation of the deployment script will be created.")]
 		public bool CreateBatchFiles { get; set; }
+		
+		public const char CREATE_STYLE_SHEETS_FLAG = 'C';
+		
+		[Option(CREATE_STYLE_SHEETS_FLAG, "createcss", HelpText = "If set, CSS files for any generated HTML files will be generated (and possibly overwritten). Otherwise, it is assumed the CSS files are already existing.")]
+		public bool CreateStyleSheets { get; set; }
 		
 		public const char CREATE_GIT_IGNORE_FILE_FLAG = 'I';
 		
@@ -160,11 +166,27 @@ namespace Deployment.ScriptGenerator
 		[Option("scriptcreationbatch", HelpText = "Indicates whether a batch file for creating the deployment scripts should be created. Only effective in minimal mode.")]
 		public bool CreateScriptCreationBatchFile { get; set; }
 		
+		public const string DEFAULT_PRIMARY_COLOR = "002564";
+		
+		[Option("primarycolor", DefaultValue = DEFAULT_PRIMARY_COLOR, HelpText = "The primary color used in the web-based changelog. This must be a six digit hexadecimal RGB color with a good contrast to white.")]
+		public string PrimaryColor { get; set; }
+		
 		[HelpOption]
 		public string GetUsage()
 		{
 			var text = HelpText.AutoBuild(this);
 			return text.ToString();
+		}
+		
+		/// <summary>
+		/// Replaces any invalid option values with default values and outputs appropriate messages.
+		/// </summary>
+		public void Sanitize()
+		{
+			if (!Regex.IsMatch(this.PrimaryColor, "^[0-9a-fA-F]{6}$")) {
+				Console.WriteLine("Using default primary color.");
+				this.PrimaryColor = DEFAULT_PRIMARY_COLOR;
+			}
 		}
 	}
 }
