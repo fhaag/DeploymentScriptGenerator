@@ -71,6 +71,7 @@ namespace Deployment.ScriptGenerator
 			
 			public void Save()
 			{
+				Directory.CreateDirectory(Path.GetDirectoryName(path));
 				File.WriteAllLines(path, entries);
 			}
 		}
