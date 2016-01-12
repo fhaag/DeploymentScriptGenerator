@@ -248,7 +248,17 @@ namespace Deployment.ScriptGenerator
 				w.WriteAttributeString("dir", settings.Options.TemporaryDirectory + "/readme");
 				w.WriteEndElement();
 				
-				CopyFile(w, "COPYING", settings.Options.TemporaryDirectory + "/readme/COPYING");
+				{
+					w.WriteStartElement("copy");
+					w.WriteAttributeString("todir", settings.Options.TemporaryDirectory + "/readme");
+					
+					w.WriteStartElement("fileset");
+					w.WriteAttributeString("casesensitive", "false");
+					IncludeLicenseFiles(w);
+					w.WriteEndElement();
+					
+					w.WriteEndElement();
+				}
 				
 				{
 					w.WriteStartElement("copy");
@@ -1143,6 +1153,45 @@ namespace Deployment.ScriptGenerator
 			WriteXsltExtensionObject(w, "urn:str", "XsltExtensions.XsltStringExtensions", "bin/build/xslt/XsltExtensions.dll");
 			w.WriteEndElement();
 			
+			w.WriteEndElement();
+		}
+		
+		private static void IncludeLicenseFiles(XmlWriter w)
+		{
+			w.WriteStartElement("include");
+			w.WriteAttributeString("name", "COPYING");
+			w.WriteEndElement();
+			
+			w.WriteStartElement("include");
+			w.WriteAttributeString("name", "LICENSE");
+			w.WriteEndElement();
+			
+			w.WriteStartElement("include");
+			w.WriteAttributeString("name", "NOTICE");
+			w.WriteEndElement();
+			
+			w.WriteStartElement("include");
+			w.WriteAttributeString("name", "*.COPYING");
+			w.WriteEndElement();
+			
+			w.WriteStartElement("include");
+			w.WriteAttributeString("name", "*.LICENSE");
+			w.WriteEndElement();
+			
+			w.WriteStartElement("include");
+			w.WriteAttributeString("name", "*.NOTICE");
+			w.WriteEndElement();
+			
+			w.WriteStartElement("include");
+			w.WriteAttributeString("name", "COPYING.*");
+			w.WriteEndElement();
+			
+			w.WriteStartElement("include");
+			w.WriteAttributeString("name", "LICENSE.*");
+			w.WriteEndElement();
+			
+			w.WriteStartElement("include");
+			w.WriteAttributeString("name", "NOTICE.*");
 			w.WriteEndElement();
 		}
 	}
