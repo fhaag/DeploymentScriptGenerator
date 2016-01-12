@@ -1,7 +1,7 @@
 ﻿/*
 This source file is a part of DeploymentScriptGenerator.
 
-Copyright (c) 2015 Florian Haag
+Copyright (c) 2015 - 2016 Florian Haag
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -59,6 +59,12 @@ namespace Deployment.ScriptGenerator
 			
 			WriteProjectId(w, "CodePlex", settings.SupportCodePlex);
 			WriteProjectId(w, "Github", settings.SupportGithub);
+			if (settings.SupportGithub) {
+				w.WriteStartElement("id");
+				w.WriteAttributeString("service", "GithubOrgOrUser");
+				WriteToDoPlaceholder(w, "insert Github user or organization ID");
+				w.WriteEndElement();
+			}
 			WriteProjectId(w, "SourceForge", settings.SupportSourceForge);
 			
 			WriteToDoElement(w, "title", "insert human-readable project title");
@@ -69,11 +75,7 @@ namespace Deployment.ScriptGenerator
 			WriteToDoElement(w, "licenseName", "insert human-readable name of the license to apply to the major part of the project");
 			
 			w.WriteStartElement("links");
-			w.WriteStartElement("link");
-			w.WriteAttributeString("type", "");
-			w.WriteAttributeString("title", "");
-			w.WriteAttributeString("url", "");
-			w.WriteEndElement();
+			WriteLink(w, "homepage", "Project Website", "http://TODO");
 			w.WriteEndElement();
 			
 			w.WriteStartElement("downloads");
@@ -137,6 +139,15 @@ namespace Deployment.ScriptGenerator
 				w.WriteAttributeString("prereleaseDefault", "true");
 			}
 			WriteToDoPlaceholder(w, "file name with placeholders %VERSION%, %DATE%, without file extension");
+			w.WriteEndElement();
+		}
+		
+		private static void WriteLink(XmlWriter w, string type, string title, string url)
+		{
+			w.WriteStartElement("link");
+			w.WriteAttributeString("type", type);
+			w.WriteAttributeString("title", title);
+			w.WriteAttributeString("url", url);
 			w.WriteEndElement();
 		}
 	}

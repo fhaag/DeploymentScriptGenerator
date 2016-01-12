@@ -65,6 +65,8 @@
     <Compile Include="ArchiveTypeUtilities.cs" />
     <Compile Include="BatchCreator.cs" />
     <Compile Include="DownloadPackage.cs" />
+    <Compile Include="ExternalSite.cs" />
+    <Compile Include="ExternalSiteUtilities.cs" />
     <Compile Include="GeneralSettings.cs" />
     <Compile Include="GeneratorOptions.cs" />
     <Compile Include="GitIgnoreWriter.cs" />

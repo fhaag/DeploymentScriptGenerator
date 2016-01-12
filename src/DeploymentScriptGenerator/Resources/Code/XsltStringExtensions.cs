@@ -24,6 +24,7 @@ THE SOFTWARE.
 ------------------------------------------------------------------------------
  */
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.XPath;
@@ -32,10 +33,13 @@ namespace XsltExtensions
 {
 	public class XsltStringExtensions
 	{
-		public string ReplaceTokens(string str, string filename, string version, string date)
+		private static string ReplaceCustomTokens(string str, IDictionary<string, string> tokenMap)
 		{
 			if (str == null) {
 				throw new ArgumentNullException("str");
+			}
+			if (tokenMap == null) {
+				throw new ArgumentNullException("tokenMap");
 			}
 			
 			var result = new StringBuilder(str.Length);
@@ -51,29 +55,40 @@ namespace XsltExtensions
 					}
 					result.Append(parts[parts.Length - 1]);
 				} else {
-					switch (parts[i]) {
-						case "FILE":
-							result.Append(filename);
-							omitLastDelimiter = true;
-							break;
-						case "VERSION":
-							result.Append(version);
-							omitLastDelimiter = true;
-							break;
-						case "DATE":
-							result.Append(date);
-							omitLastDelimiter = true;
-							break;
-						default:
-							if (!omitLastDelimiter) {
-								result.Append('%');
-							}
-							result.Append(parts[i]);
-							break;
+					string newValue;
+					if (tokenMap.TryGetValue(parts[i], out newValue)) {
+						result.Append(newValue);
+						omitLastDelimiter = true;
+					} else {
+						if (!omitLastDelimiter) {
+							result.Append('%');
+						}
+						result.Append(parts[i]);
 					}
 				}
 			}
 			return result.ToString();
+		}
+		
+		public string ReplaceTokens(string str, string filename, string version, string date)
+		{
+			var tokenMap = new Dictionary<string, string>();
+			tokenMap["FILE"] = filename;
+			tokenMap["VERSION"] = version;
+			tokenMap["DATE"] = date;
+			
+			return ReplaceCustomTokens(str, tokenMap);
+		}
+		
+		public string ReplaceUrlTokens(string url, string version, string date, string projectId, string prettyProjectId)
+		{
+			var tokenMap = new Dictionary<string, string>();
+			tokenMap["VERSION"] = version;
+			tokenMap["DATE"] = date;
+			tokenMap["PROJECT"] = projectId;
+			tokenMap["PROJECTFORMATTED"] = prettyProjectId;
+			
+			return ReplaceCustomTokens(str, tokenMap);
 		}
 		
 		public string Underline(int length, string underlineChar)

@@ -185,5 +185,10 @@ namespace Deployment.ScriptGenerator
 				return "http://local/";
 			}
 		}
+		
+		public string WebChangeLogFileName(ExternalSite site)
+		{
+			return "changelog_" + site.ExternalSiteToString() + ".html";
+		}
 	}
 }

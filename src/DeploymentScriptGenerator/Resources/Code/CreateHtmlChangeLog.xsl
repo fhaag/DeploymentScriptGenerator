@@ -2,7 +2,7 @@
 <!--
 This source file is a part of DeploymentScriptGenerator.
 
-Copyright (c) 2015 Florian Haag
+Copyright (c) 2015 - 2016 Florian Haag
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@ THE SOFTWARE.
 	<xsl:namespace-alias stylesheet-prefix="local" result-prefix="#default"/>
 	<xsl:param name="ReleaseVersion"/>
 	<xsl:param name="ReleaseDate"/>
-	<xsl:param name="ProjectUrl"/>
 	<xsl:param name="TextChangeLogUrl"/>
 	
 	<xsl:template match="/local:project">
@@ -41,7 +40,7 @@ THE SOFTWARE.
 </xsl:text></head><xsl:text>
   </xsl:text><header><xsl:text>
     </xsl:text><h1><xsl:value-of select="local:title"/> Version History</h1><xsl:text>
-    </xsl:text><a href="$ProjectUrl">back to project website</a><xsl:text>
+    </xsl:text><a href="/local:project/local:links/local:link[@type = 'homepage']/@url">back to project website</a><xsl:text>
   </xsl:text></header><xsl:text>
   </xsl:text><main><xsl:text>
     </xsl:text><table><xsl:text>
@@ -73,10 +72,10 @@ THE SOFTWARE.
         </xsl:text></tr></xsl:for-each><xsl:text>
       </xsl:text></tbody><xsl:text>
     </xsl:text></table><xsl:text>
-  </xsl:text></main><xsl:text>
+  </xsl:text></main><xsl:if test="string-length($TextChangeLogUrl) &gt; 0"><xsl:text>
   </xsl:text><footer><xsl:text>
     </xsl:text><a href="$TextChangeLogUrl">download text version of this changelog</a><xsl:text>
-  </xsl:text></footer><xsl:text>
+  </xsl:text></footer></xsl:if><xsl:text>
 </xsl:text></html>
 	</xsl:template>
 	

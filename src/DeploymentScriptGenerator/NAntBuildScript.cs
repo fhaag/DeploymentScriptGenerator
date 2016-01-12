@@ -87,6 +87,7 @@ namespace Deployment.ScriptGenerator
 			}
 			if (settings.SupportGithub) {
 				DeclareSiteSpecificId(settings, w, "Github");
+				XmlPeek(w, settings.Options.PublicDirectory + "/" + settings.Options.ProjectInfoFile, "/local:project/local:id[@service = 'GithubOrgOrUser']", "project.GithubOrgOrUserId", true);
 			}
 			if (settings.SupportSourceForge) {
 				DeclareSiteSpecificId(settings, w, "SourceForge");
@@ -292,19 +293,12 @@ namespace Deployment.ScriptGenerator
 				}
 				
 				if (settings.Options.WebChangeLog) {
-					w.WriteStartElement("style");
-					w.WriteAttributeString("style", settings.Options.ToolDirectory + "/CreateHtmlChangeLog.xsl");
-					w.WriteAttributeString("in", settings.Options.PublicDirectory + "/" + settings.Options.ProjectInfoFile);
-					w.WriteAttributeString("out", settings.Options.ReleaseDirectory + "/changelog.html");
-					
-					w.WriteStartElement("parameters");
-					WriteXsltParameter(w, "ReleaseVersion", "${release.version}");
-					WriteXsltParameter(w, "ReleaseDate", "${internal.userFriendlyDate}");
-					WriteXsltParameter(w, "ProjectUrl", ""); // TODO: retrieve project website URL
-					WriteXsltParameter(w, "TextChangeLogUrl", ""); // TODO: retrieve text changelog URL
-					w.WriteEndElement();
-					
-					w.WriteEndElement();
+					if (settings.Options.PublishGithubPages) {
+						CreateWebChangeLog(settings, w, ExternalSite.Github);
+					}
+					if (settings.Options.PublishSourceForgeProjectWeb) {
+						CreateWebChangeLog(settings, w, ExternalSite.SourceForge);
+					}
 				}
 				
 				w.WriteEndElement();
@@ -428,7 +422,9 @@ namespace Deployment.ScriptGenerator
 				}
 				
 				CopyFile(w, settings.Options.TemporaryDirectory + "/readme/readme.txt", settings.Options.ReleaseDirectory + "/readme.txt");
-				CopyFile(w, settings.Options.TemporaryDirectory + "/readme/changelog.txt", settings.Options.ReleaseDirectory + "/changelog.txt");
+				if (settings.Options.TextChangeLog) {
+					CopyFile(w, settings.Options.TemporaryDirectory + "/readme/changelog.txt", settings.Options.ReleaseDirectory + "/changelog.txt");
+				}
 				
 				if (settings.Options.ReleaseOnNuGet) {
 					w.WriteStartElement("copy");
@@ -672,7 +668,7 @@ namespace Deployment.ScriptGenerator
 				
 				if (settings.Options.PublishGithubPages) {
 					if (settings.Options.WebChangeLog) {
-						CopyFile(w, settings.Options.ReleaseDirectory + "/changelog.html", "${internal.WebPath}/", true);
+						CopyFile(w, settings.Options.ReleaseDirectory + "/" + settings.WebChangeLogFileName(ExternalSite.Github), "${internal.WebPath}/changelog.html", true);
 					}
 					
 					if (settings.Options.WebApiDoc) {
@@ -699,7 +695,7 @@ namespace Deployment.ScriptGenerator
 					};
 					
 					if (settings.Options.WebChangeLog) {
-						args.Add("put changelog.html");
+						args.Add("put " + settings.WebChangeLogFileName(ExternalSite.SourceForge) + " ./changelog.html");
 					}
 					
 					if (settings.Options.WebApiDoc) {
@@ -1045,12 +1041,19 @@ namespace Deployment.ScriptGenerator
 			w.WriteEndElement();
 		}
 		
-		private static void XmlPeek(XmlWriter w, string xmlFile, string xpath, string property)
+		private static void XmlPeek(XmlWriter w, string xmlFile, string xpath, string property, bool declareDefaultNamespace = false)
 		{
 			w.WriteStartElement("xmlpeek");
 			w.WriteAttributeString("file", xmlFile);
 			w.WriteAttributeString("xpath", xpath);
 			w.WriteAttributeString("property", property);
+			
+			if (declareDefaultNamespace) {
+				w.WriteStartElement("namespaces");
+				WriteXmlNamespace(w, "local", "http://local/");
+				w.WriteEndElement();
+			}
+			
 			w.WriteEndElement();
 		}
 		
@@ -1082,7 +1085,7 @@ namespace Deployment.ScriptGenerator
 		
 		private static void LoadReleaseFileName(GeneralSettings settings, XmlWriter w, string shortId, string longId)
 		{
-			XmlPeek(w, settings.Options.PublicDirectory + "/" + settings.Options.ProjectInfoFile, "/project/downloads/file[@type = '" + shortId + "']/text()", "internal.Raw" + longId + "ReleaseName");
+			XmlPeek(w, settings.Options.PublicDirectory + "/" + settings.Options.ProjectInfoFile, "/project/downloads/file[@type = '" + shortId + "']/text()", "internal.Raw" + longId + "ReleaseName", true);
 			
 			string nameProp = "internal." + longId + "ReleaseName";
 			
@@ -1107,6 +1110,40 @@ namespace Deployment.ScriptGenerator
 				result.Append(", '%" + pairs[i] + "%', " + pairs[i + 1] + ")");
 			}
 			return result.ToString();
+		}
+		
+		private static void CreateWebChangeLog(GeneralSettings settings, XmlWriter w, ExternalSite site)
+		{
+			w.WriteStartElement("style");
+			w.WriteAttributeString("style", settings.Options.ToolDirectory + "/CreateHtmlChangeLog.xsl");
+			w.WriteAttributeString("in", settings.Options.PublicDirectory + "/" + settings.Options.ProjectInfoFile);
+			w.WriteAttributeString("out", settings.Options.ReleaseDirectory + "/" + settings.WebChangeLogFileName(site));
+			
+			w.WriteStartElement("parameters");
+			WriteXsltParameter(w, "ReleaseVersion", "${release.version}");
+			WriteXsltParameter(w, "ReleaseDate", "${internal.userFriendlyDate}");
+			if (settings.Options.TextChangeLog) {
+				switch (site) {
+					case ExternalSite.Github:
+						WriteXsltParameter(w, "TextChangeLogUrl", "https://github.com/${project.GithubOrgOrUserId}/${project.GithubId}/releases/download/v${release.version}/changelog.txt");
+						break;
+					case ExternalSite.SourceForge:
+						WriteXsltParameter(w, "TextChangeLogUrl", "http://sourceforge.net/projects/${project.SourceForgeId}/files/${project.prettyId}/changelog.txt/download");
+						break;
+					default:
+						WriteXsltParameter(w, "TextChangeLogUrl", "");
+						break;
+				}
+			} else {
+				WriteXsltParameter(w, "TextChangeLogUrl", "");
+			}
+			w.WriteEndElement();
+			
+			w.WriteStartElement("extensionobjects");
+			WriteXsltExtensionObject(w, "urn:str", "XsltExtensions.XsltStringExtensions", "bin/build/xslt/XsltExtensions.dll");
+			w.WriteEndElement();
+			
+			w.WriteEndElement();
 		}
 	}
 }
