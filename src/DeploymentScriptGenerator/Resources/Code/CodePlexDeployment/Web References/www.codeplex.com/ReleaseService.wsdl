@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.codeplex.com/services/ReleaseService/v1.0" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://www.codeplex.com/services/ReleaseService/v1.0" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.codeplex.com/services/ReleaseService/v1.0">
+      <s:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+      <s:import namespace="http://schemas.xmlsoap.org/wsdl/" />
+      <s:element name="CreateProjectRelease">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="description" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="releaseDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="status" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="showToPublic" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="isDefaultRelease" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="changesetId" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateProjectReleaseResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CreateProjectReleaseResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateARelease">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="description" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="releaseDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="status" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="showToPublic" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="isDefaultRelease" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateAReleaseResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CreateAReleaseResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateRelease">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="description" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="releaseDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="status" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="showToPublic" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="showOnHomePage" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="isDefaultRelease" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateReleaseResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CreateReleaseResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateClickOnceRelease">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="description" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="releaseDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="status" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="isDefaultRelease" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="changesetId" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="clickOnceFileBytes" type="s:base64Binary" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateClickOnceReleaseResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CreateClickOnceReleaseResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateRelease">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectName" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="releaseId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="description" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="releaseDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="status" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="showToPublic" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="isDefaultRelease" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="changeSetId" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateReleaseResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="UpdateClickOnceRelease">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectName" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="releaseId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="description" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="releaseDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="status" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="isDefaultRelease" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="changeSetId" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="clickOnceFileBytes" type="s:base64Binary" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateClickOnceReleaseResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="UploadReleaseFiles">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="releaseName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="files" type="tns:ArrayOfReleaseFile" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfReleaseFile">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ReleaseFile" nillable="true" type="tns:ReleaseFile" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ReleaseFile">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="FileData" type="s:base64Binary" />
+          <s:element minOccurs="0" maxOccurs="1" name="FileName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FileType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MimeType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="UploadReleaseFilesResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="UploadTheReleaseFiles">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="releaseName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="files" type="tns:ArrayOfReleaseFile" />
+            <s:element minOccurs="0" maxOccurs="1" name="recommendedFileName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UploadTheReleaseFilesResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetRelease">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="releaseName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetReleaseResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetReleaseResult" type="tns:Release" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="Release">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Id" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ReleaseDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ShowToPublic" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="DefaultRelease" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="ModifiedDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="ModifiedByUserName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DevelopmentStatus" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ChangesetId" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsClickOnceRelease" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsArchived" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="CreateProjectReleaseSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateProjectRelease" />
+  </wsdl:message>
+  <wsdl:message name="CreateProjectReleaseSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateProjectReleaseResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateAReleaseSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateARelease" />
+  </wsdl:message>
+  <wsdl:message name="CreateAReleaseSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateAReleaseResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateReleaseSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateRelease" />
+  </wsdl:message>
+  <wsdl:message name="CreateReleaseSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateReleaseResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateClickOnceReleaseSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateClickOnceRelease" />
+  </wsdl:message>
+  <wsdl:message name="CreateClickOnceReleaseSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateClickOnceReleaseResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateReleaseSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateRelease" />
+  </wsdl:message>
+  <wsdl:message name="UpdateReleaseSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateReleaseResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateClickOnceReleaseSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateClickOnceRelease" />
+  </wsdl:message>
+  <wsdl:message name="UpdateClickOnceReleaseSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateClickOnceReleaseResponse" />
+  </wsdl:message>
+  <wsdl:message name="UploadReleaseFilesSoapIn">
+    <wsdl:part name="parameters" element="tns:UploadReleaseFiles" />
+  </wsdl:message>
+  <wsdl:message name="UploadReleaseFilesSoapOut">
+    <wsdl:part name="parameters" element="tns:UploadReleaseFilesResponse" />
+  </wsdl:message>
+  <wsdl:message name="UploadTheReleaseFilesSoapIn">
+    <wsdl:part name="parameters" element="tns:UploadTheReleaseFiles" />
+  </wsdl:message>
+  <wsdl:message name="UploadTheReleaseFilesSoapOut">
+    <wsdl:part name="parameters" element="tns:UploadTheReleaseFilesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetReleaseSoapIn">
+    <wsdl:part name="parameters" element="tns:GetRelease" />
+  </wsdl:message>
+  <wsdl:message name="GetReleaseSoapOut">
+    <wsdl:part name="parameters" element="tns:GetReleaseResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ReleaseServiceSoap">
+    <wsdl:operation name="CreateProjectRelease">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Creates a new release in the specified project.</wsdl:documentation>
+      <wsdl:input message="tns:CreateProjectReleaseSoapIn" />
+      <wsdl:output message="tns:CreateProjectReleaseSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateARelease">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Creates a new release in the specified project.</wsdl:documentation>
+      <wsdl:input message="tns:CreateAReleaseSoapIn" />
+      <wsdl:output message="tns:CreateAReleaseSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateRelease">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Deprecated. Creates a new release in the specified project. The ShowOnHomePage parameter is included only for backwards-compatibility - it serves no purpose.</wsdl:documentation>
+      <wsdl:input message="tns:CreateReleaseSoapIn" />
+      <wsdl:output message="tns:CreateReleaseSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateClickOnceRelease">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Creates a new ClickOnce release in the specified project.</wsdl:documentation>
+      <wsdl:input message="tns:CreateClickOnceReleaseSoapIn" />
+      <wsdl:output message="tns:CreateClickOnceReleaseSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateRelease">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Updates an existing release in the specified project.</wsdl:documentation>
+      <wsdl:input message="tns:UpdateReleaseSoapIn" />
+      <wsdl:output message="tns:UpdateReleaseSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateClickOnceRelease">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Updates an existing ClickOnce release in the specified project.</wsdl:documentation>
+      <wsdl:input message="tns:UpdateClickOnceReleaseSoapIn" />
+      <wsdl:output message="tns:UpdateClickOnceReleaseSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UploadReleaseFiles">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Adds one or more files to an existing release.</wsdl:documentation>
+      <wsdl:input message="tns:UploadReleaseFilesSoapIn" />
+      <wsdl:output message="tns:UploadReleaseFilesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UploadTheReleaseFiles">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Adds one or more files to an existing release with the ability to set a recommended file. The recommended file name must match a file name in the files being uploaded.</wsdl:documentation>
+      <wsdl:input message="tns:UploadTheReleaseFilesSoapIn" />
+      <wsdl:output message="tns:UploadTheReleaseFilesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRelease">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieves the release information for a givin project and release name.</wsdl:documentation>
+      <wsdl:input message="tns:GetReleaseSoapIn" />
+      <wsdl:output message="tns:GetReleaseSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ReleaseServiceSoap" type="tns:ReleaseServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CreateProjectRelease">
+      <soap:operation soapAction="http://www.codeplex.com/services/ReleaseService/v1.0/CreateProjectRelease" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateARelease">
+      <soap:operation soapAction="http://www.codeplex.com/services/ReleaseService/v1.0/CreateARelease" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateRelease">
+      <soap:operation soapAction="http://www.codeplex.com/services/ReleaseService/v1.0/CreateRelease" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateClickOnceRelease">
+      <soap:operation soapAction="http://www.codeplex.com/services/ReleaseService/v1.0/CreateClickOnceRelease" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateRelease">
+      <soap:operation soapAction="http://www.codeplex.com/services/ReleaseService/v1.0/UpdateRelease" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateClickOnceRelease">
+      <soap:operation soapAction="http://www.codeplex.com/services/ReleaseService/v1.0/UpdateClickOnceRelease" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadReleaseFiles">
+      <soap:operation soapAction="http://www.codeplex.com/services/ReleaseService/v1.0/UploadReleaseFiles" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadTheReleaseFiles">
+      <soap:operation soapAction="http://www.codeplex.com/services/ReleaseService/v1.0/UploadTheReleaseFiles" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRelease">
+      <soap:operation soapAction="http://www.codeplex.com/services/ReleaseService/v1.0/GetRelease" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ReleaseServiceSoap12" type="tns:ReleaseServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CreateProjectRelease">
+      <soap12:operation soapAction="http://www.codeplex.com/services/ReleaseService/v1.0/CreateProjectRelease" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateARelease">
+      <soap12:operation soapAction="http://www.codeplex.com/services/ReleaseService/v1.0/CreateARelease" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateRelease">
+      <soap12:operation soapAction="http://www.codeplex.com/services/ReleaseService/v1.0/CreateRelease" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateClickOnceRelease">
+      <soap12:operation soapAction="http://www.codeplex.com/services/ReleaseService/v1.0/CreateClickOnceRelease" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateRelease">
+      <soap12:operation soapAction="http://www.codeplex.com/services/ReleaseService/v1.0/UpdateRelease" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateClickOnceRelease">
+      <soap12:operation soapAction="http://www.codeplex.com/services/ReleaseService/v1.0/UpdateClickOnceRelease" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadReleaseFiles">
+      <soap12:operation soapAction="http://www.codeplex.com/services/ReleaseService/v1.0/UploadReleaseFiles" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadTheReleaseFiles">
+      <soap12:operation soapAction="http://www.codeplex.com/services/ReleaseService/v1.0/UploadTheReleaseFiles" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRelease">
+      <soap12:operation soapAction="http://www.codeplex.com/services/ReleaseService/v1.0/GetRelease" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ReleaseService">
+    <wsdl:port name="ReleaseServiceSoap" binding="tns:ReleaseServiceSoap">
+      <soap:address location="https://www.codeplex.com/Services/ReleaseService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ReleaseServiceSoap12" binding="tns:ReleaseServiceSoap12">
+      <soap12:address location="https://www.codeplex.com/Services/ReleaseService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

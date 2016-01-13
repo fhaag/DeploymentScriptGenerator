@@ -84,6 +84,15 @@
     <EmbeddedResource Include="Resources\Code\XsltStringExtensions.cs">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.XsltStringExtensions</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Code\CodePlexDeployment\Properties\AssemblyInfo.cs">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.CodePlexDeployment.AssemblyInfoCS</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Code\CodePlexDeployment\Web References\www.codeplex.com\Reference.cs">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.CodePlexDeployment.WebReferenceCS</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Code\GithubDeployment\Properties\AssemblyInfo.cs">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.GithubDeployment.AssemblyInfoCS</LogicalName>
+    </EmbeddedResource>
     <Compile Include="Resources\ResourceLoader.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -106,10 +115,31 @@
     <EmbeddedResource Include="Resources\Code\changelog.less">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.ChangeLogCSS</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Code\CodePlexDeployment\CodePlexDeployment.csproj">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.CodePlexDeployment.Project</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Code\CodePlexDeployment\Web References\www.codeplex.com\Reference.map">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.CodePlexDeployment.WebReferenceMAP</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Code\CodePlexDeployment\Web References\www.codeplex.com\ReleaseService.disco">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.CodePlexDeployment.WebReferenceDISCO</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Code\CodePlexDeployment\Web References\www.codeplex.com\ReleaseService.wsdl">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.CodePlexDeployment.WebReferenceWSDL</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Code\GithubDeployment\GithubDeployment.csproj">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.GithubDeployment.Project</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources" />
     <Folder Include="Resources\Code" />
+    <Folder Include="Resources\Code\CodePlexDeployment" />
+    <Folder Include="Resources\Code\CodePlexDeployment\Properties" />
+    <Folder Include="Resources\Code\CodePlexDeployment\Web References" />
+    <Folder Include="Resources\Code\CodePlexDeployment\Web References\www.codeplex.com" />
+    <Folder Include="Resources\Code\GithubDeployment" />
+    <Folder Include="Resources\Code\GithubDeployment\Properties" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
