@@ -49,6 +49,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
+    <Compile Include="Worker.cs" />
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />
