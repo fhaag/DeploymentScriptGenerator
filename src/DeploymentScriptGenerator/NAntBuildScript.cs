@@ -197,7 +197,10 @@ namespace Deployment.ScriptGenerator
 			                	"**/*.LICENSE",
 			                	"**/*.snk",
 			                	"**/*.resx",
-			                	"**/*.config"
+			                	"**/*.config",
+			                	"**/*.map",
+			                	"**/*.disco",
+			                	"**/*.wsdl"
 			                },
 			                new[] {
 			                	"**/bin/**",
