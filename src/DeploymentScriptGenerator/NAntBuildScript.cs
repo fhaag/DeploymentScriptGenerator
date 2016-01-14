@@ -508,7 +508,7 @@ namespace Deployment.ScriptGenerator
 			if (settings.SupportSourceForge) {
 				PeekApiKey(settings, w, "SourceForgeUser", "internal.SFUser");
 				PeekApiKey(settings, w, "SourceForgeSSH", "internal.SFSSHKey");
-				PeekApiKey(settings, w, "SourceForgeAPI", "internal.SFapikey");
+				PeekApiKey(settings, w, "SourceForgeAPI", "internal.SFapikey"); // TODO: use SF API to set a default release
 			}
 			
 			{
