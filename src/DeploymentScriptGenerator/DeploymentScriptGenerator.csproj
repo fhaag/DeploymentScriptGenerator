@@ -99,6 +99,9 @@
     <EmbeddedResource Include="Resources\Code\GithubDeployment\Worker.cs">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.GithubDeployment.WorkerCS</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Code\Deployment.Common\Properties\AssemblyInfo.cs">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.Common.AssemblyInfoCS</LogicalName>
+    </EmbeddedResource>
     <Compile Include="Resources\ResourceLoader.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +142,9 @@
     <EmbeddedResource Include="Resources\Code\GithubDeployment\packages.config">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.GithubDeployment.NuGetPackages</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Code\Deployment.Common\Deployment.Common.csproj">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.Common.Project</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources" />
@@ -147,6 +153,8 @@
     <Folder Include="Resources\Code\CodePlexDeployment\Properties" />
     <Folder Include="Resources\Code\CodePlexDeployment\Web References" />
     <Folder Include="Resources\Code\CodePlexDeployment\Web References\www.codeplex.com" />
+    <Folder Include="Resources\Code\Deployment.Common" />
+    <Folder Include="Resources\Code\Deployment.Common\Properties" />
     <Folder Include="Resources\Code\GithubDeployment" />
     <Folder Include="Resources\Code\GithubDeployment\Properties" />
   </ItemGroup>

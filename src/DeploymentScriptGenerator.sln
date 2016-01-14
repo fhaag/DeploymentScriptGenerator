@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodePlexDeployment", "Deplo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GithubDeployment", "DeploymentScriptGenerator\Resources\Code\GithubDeployment\GithubDeployment.csproj", "{183CFCD0-974D-4FF5-81AA-D13D735F59B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deployment.Common", "DeploymentScriptGenerator\Resources\Code\Deployment.Common\Deployment.Common.csproj", "{717F1E9D-18F7-4B7F-AF90-B29FF9B152CC}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeploymentScriptGenerator", "DeploymentScriptGenerator\DeploymentScriptGenerator.csproj", "{956EC19E-417F-4D8B-A1EA-E915BE349752}"
 EndProject
 Global
@@ -30,9 +32,14 @@ Global
 		{183CFCD0-974D-4FF5-81AA-D13D735F59B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{183CFCD0-974D-4FF5-81AA-D13D735F59B0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{183CFCD0-974D-4FF5-81AA-D13D735F59B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{717F1E9D-18F7-4B7F-AF90-B29FF9B152CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{717F1E9D-18F7-4B7F-AF90-B29FF9B152CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{717F1E9D-18F7-4B7F-AF90-B29FF9B152CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{717F1E9D-18F7-4B7F-AF90-B29FF9B152CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{491AAE41-618B-43CB-BA93-0C9C88059EDD} = {1C295B86-F2FC-43A9-B183-8F47C84E998D}
 		{183CFCD0-974D-4FF5-81AA-D13D735F59B0} = {1C295B86-F2FC-43A9-B183-8F47C84E998D}
+		{717F1E9D-18F7-4B7F-AF90-B29FF9B152CC} = {1C295B86-F2FC-43A9-B183-8F47C84E998D}
 	EndGlobalSection
 EndGlobal
