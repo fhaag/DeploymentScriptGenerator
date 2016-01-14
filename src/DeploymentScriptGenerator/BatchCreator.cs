@@ -154,6 +154,10 @@ namespace Deployment.ScriptGenerator
 				result.Add(GeneratorOptions.SIMULATE_FLAG);
 			}
 			
+			if (settings.Options.Recompile) {
+				result.Add(GeneratorOptions.RECOMPILE_FLAG);
+			}
+			
 			return result;
 		}
 	}

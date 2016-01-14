@@ -372,6 +372,32 @@ namespace Deployment.ScriptGenerator
 				StartTarget(w, "release",
 				            "prepare-release-state", "clean", "prepare-readme");
 				
+				if (settings.Options.Recompile) { // TODO: support several target platforms
+					w.WriteStartElement("foreach");
+					w.WriteAttributeString("item", "File");
+					w.WriteAttributeString("in", "src");
+					w.WriteAttributeString("property", "solutionfile");
+					
+					w.WriteStartElement("in");
+					w.WriteStartElement("items");
+					w.WriteStartElement("include");
+					w.WriteAttributeString("name", "*.sln");
+					w.WriteEndElement();
+					w.WriteEndElement();
+					w.WriteEndElement();
+					
+					w.WriteStartElement("do");
+					
+					w.WriteStartElement("solution");
+					w.WriteAttributeString("configuration", "release");
+					w.WriteAttributeString("solutionfile", "src/${solutionfile}");
+					w.WriteEndElement();
+					
+					w.WriteEndElement();
+					
+					w.WriteEndElement();
+				}
+				
 				w.WriteStartElement("mkdir");
 				w.WriteAttributeString("dir", settings.Options.ReleaseDirectory);
 				w.WriteEndElement();

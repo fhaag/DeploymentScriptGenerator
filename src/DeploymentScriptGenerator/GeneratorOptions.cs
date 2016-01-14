@@ -100,6 +100,11 @@ namespace Deployment.ScriptGenerator
 		[Option(RELEASE_ON_NU_GET_FLAG, "nuget", HelpText = "Indicates whether to release any NuGet packages for the project.")]
 		public bool ReleaseOnNuGet { get; set; }
 		
+		public const char RECOMPILE_FLAG = 'r';
+		
+		[Option(RECOMPILE_FLAG, "recompile", HelpText = "Indicates whether the code should be recompiled before packing release files.")]
+		public bool Recompile { get; set; }
+		
 		public const char RELEASE_ON_SOURCE_FORGE_FLAG = 's';
 		
 		[Option(RELEASE_ON_SOURCE_FORGE_FLAG, "sourceforge", HelpText = "Indicates whether to release downloads via the SourceForge File Release System.")]
