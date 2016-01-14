@@ -322,15 +322,17 @@ namespace Deployment.ScriptGenerator
 			{
 				StartTarget(w, "clean");
 				
-				w.WriteStartElement("delete");
-				w.WriteAttributeString("dir", settings.Options.ReleaseDirectory);
-				w.WriteAttributeString("if", "${directory::exists('" + settings.Options.ReleaseDirectory + "')}");
-				w.WriteEndElement();
-				
-				w.WriteStartElement("delete");
-				w.WriteAttributeString("dir", settings.Options.TemporaryDirectory);
-				w.WriteAttributeString("if", "${directory::exists('" + settings.Options.TemporaryDirectory + "')}");
-				w.WriteEndElement();
+				if (!settings.Options.Simulate) {
+					w.WriteStartElement("delete");
+					w.WriteAttributeString("dir", settings.Options.ReleaseDirectory);
+					w.WriteAttributeString("if", "${directory::exists('" + settings.Options.ReleaseDirectory + "')}");
+					w.WriteEndElement();
+					
+					w.WriteStartElement("delete");
+					w.WriteAttributeString("dir", settings.Options.TemporaryDirectory);
+					w.WriteAttributeString("if", "${directory::exists('" + settings.Options.TemporaryDirectory + "')}");
+					w.WriteEndElement();
+				}
 				
 				w.WriteEndElement();
 			}
@@ -506,7 +508,7 @@ namespace Deployment.ScriptGenerator
 			if (settings.SupportSourceForge) {
 				PeekApiKey(settings, w, "SourceForgeUser", "internal.SFUser");
 				PeekApiKey(settings, w, "SourceForgeSSH", "internal.SFSSHKey");
-				PeekApiKey(settings, w, "SourceForgeAPI", "internal.SFapikey");
+				PeekApiKey(settings, w, "SourceForgeAPI", "internal.SFapikey"); // TODO: use SF API to set a default release
 			}
 			
 			{
@@ -554,7 +556,7 @@ namespace Deployment.ScriptGenerator
 				
 				w.WriteStartElement("solution");
 				w.WriteAttributeString("configuration", "Release");
-				w.WriteAttributeString("solutionfile", settings.Options.ToolDirectory + "/DeploymentLibs/DeploymentLibs.sln");
+				w.WriteAttributeString("solutionfile", settings.Options.ToolDirectory + "/DeploymentLibs/DeploymentLibs.sln"); // TODO: generate DeploymentLibs.sln (and write projects from resources)
 				w.WriteAttributeString("outputdir", "bin/build/deployment");
 				w.WriteEndElement();
 				
@@ -583,18 +585,20 @@ namespace Deployment.ScriptGenerator
 				w.WriteStartElement("code");
 				
 				{
+					string linePrefix = settings.Options.Simulate ? "\t// " : "\t";
+					
 					var githubDeploymentCode = new System.Text.StringBuilder();
 					githubDeploymentCode.AppendLine();
 					githubDeploymentCode.AppendLine("public static void ScriptMain(Project project)");
 					githubDeploymentCode.AppendLine("{");
-					githubDeploymentCode.AppendLine("	Deployment.Github.Worker.Publish(Path.Combine(project.BaseDirectory, \"" + settings.Options.PublicDirectory + "\", \"" + settings.Options.ProjectInfoFile + "\"),");
-					githubDeploymentCode.AppendLine("	                                 Path.Combine(project.BaseDirectory, \"" + settings.Options.ReleaseDirectory + "\"),");
-					githubDeploymentCode.AppendLine("	                                 " + typeof(ArchiveType).FullName + "." + settings.GithubDownloadFormat.ToString() + ",");
-					githubDeploymentCode.AppendLine("	                                 project.Properties[\"release.version\"],");
-					githubDeploymentCode.AppendLine("	                                 project.Properties[\"internal.userFriendlyDate\"],");
-					githubDeploymentCode.AppendLine("	                                 project.Properties[\"internal.isoDate\"],");
-					githubDeploymentCode.AppendLine("	                                 project.Properties[\"internal.GithubUser\"],");
-					githubDeploymentCode.AppendLine("	                                 project.Properties[\"internal.GithubPW\"]);");
+					githubDeploymentCode.AppendLine(linePrefix + "Deployment.Github.Worker.Publish(Path.Combine(project.BaseDirectory, \"" + settings.Options.PublicDirectory + "\", \"" + settings.Options.ProjectInfoFile + "\"),");
+					githubDeploymentCode.AppendLine(linePrefix + "                                 Path.Combine(project.BaseDirectory, \"" + settings.Options.ReleaseDirectory + "\"),");
+					githubDeploymentCode.AppendLine(linePrefix + "                                 " + typeof(ArchiveType).FullName + "." + settings.GithubDownloadFormat.ToString() + ",");
+					githubDeploymentCode.AppendLine(linePrefix + "                                 project.Properties[\"release.version\"],");
+					githubDeploymentCode.AppendLine(linePrefix + "                                 project.Properties[\"internal.userFriendlyDate\"],");
+					githubDeploymentCode.AppendLine(linePrefix + "                                 project.Properties[\"internal.isoDate\"],");
+					githubDeploymentCode.AppendLine(linePrefix + "                                 project.Properties[\"internal.GithubUser\"],");
+					githubDeploymentCode.AppendLine(linePrefix + "                                 project.Properties[\"internal.GithubPW\"]);");
 					githubDeploymentCode.AppendLine("}");
 					w.WriteCData(githubDeploymentCode.ToString());
 				}
@@ -618,12 +622,14 @@ namespace Deployment.ScriptGenerator
 					"option confirm off",
 					"cd /home/frs/project/${project.SourceForgeId}/${project.prettyId}"
 				};
-				if (settings.Options.TextChangeLog) {
-					args.Add("put changelog.txt");
+				if (!settings.Options.Simulate) {
+					if (settings.Options.TextChangeLog) {
+						args.Add("put changelog.txt");
+					}
+					args.Add("mkdir ${release.version}/");
+					args.Add("put readme.txt ${release.version}/");
+					args.Add("put *" + settings.SourceForgeDownloadFormat.GetFileExtension() + " ${release.version}/");
 				}
-				args.Add("mkdir ${release.version}/");
-				args.Add("put readme.txt ${release.version}/");
-				args.Add("put *" + settings.SourceForgeDownloadFormat.GetFileExtension() + " ${release.version}/");
 				args.Add("close");
 				args.Add("exit");
 				
@@ -655,18 +661,20 @@ namespace Deployment.ScriptGenerator
 				w.WriteStartElement("code");
 				
 				{
+					string linePrefix = settings.Options.Simulate ? "\t// " : "\t";
+					
 					var codePlexDeploymentCode = new System.Text.StringBuilder();
 					codePlexDeploymentCode.AppendLine();
 					codePlexDeploymentCode.AppendLine("public static void ScriptMain(Project project)");
 					codePlexDeploymentCode.AppendLine("{");
-					codePlexDeploymentCode.AppendLine("	Deployment.CodePlex.Worker.Publish(Path.Combine(project.BaseDirectory, \"" + settings.Options.PublicDirectory + "\", \"" + settings.Options.ProjectInfoFile + "\"),");
-					codePlexDeploymentCode.AppendLine("	                                   Path.Combine(project.BaseDirectory, \"" + settings.Options.ReleaseDirectory + "\"),");
-					codePlexDeploymentCode.AppendLine("	                                   " + typeof(ArchiveType).FullName + "." + settings.CodePlexDownloadFormat.ToString() + ",");
-					codePlexDeploymentCode.AppendLine("	                                   project.Properties[\"release.version\"],");
-					codePlexDeploymentCode.AppendLine("	                                   project.Properties[\"internal.userFriendlyDate\"],");
-					codePlexDeploymentCode.AppendLine("	                                   project.Properties[\"internal.isoDate\"],");
-					codePlexDeploymentCode.AppendLine("	                                   project.Properties[\"internal.CodePlexUser\"],");
-					codePlexDeploymentCode.AppendLine("	                                   project.Properties[\"internal.CodePlexPW\"]);");
+					codePlexDeploymentCode.AppendLine(linePrefix + "Deployment.CodePlex.Worker.Publish(Path.Combine(project.BaseDirectory, \"" + settings.Options.PublicDirectory + "\", \"" + settings.Options.ProjectInfoFile + "\"),");
+					codePlexDeploymentCode.AppendLine(linePrefix + "                                   Path.Combine(project.BaseDirectory, \"" + settings.Options.ReleaseDirectory + "\"),");
+					codePlexDeploymentCode.AppendLine(linePrefix + "                                   " + typeof(ArchiveType).FullName + "." + settings.CodePlexDownloadFormat.ToString() + ",");
+					codePlexDeploymentCode.AppendLine(linePrefix + "                                   project.Properties[\"release.version\"],");
+					codePlexDeploymentCode.AppendLine(linePrefix + "                                   project.Properties[\"internal.userFriendlyDate\"],");
+					codePlexDeploymentCode.AppendLine(linePrefix + "                                   project.Properties[\"internal.isoDate\"],");
+					codePlexDeploymentCode.AppendLine(linePrefix + "                                   project.Properties[\"internal.CodePlexUser\"],");
+					codePlexDeploymentCode.AppendLine(linePrefix + "                                   project.Properties[\"internal.CodePlexPW\"]);");
 					codePlexDeploymentCode.AppendLine("}");
 					w.WriteCData(codePlexDeploymentCode.ToString());
 				}
@@ -679,77 +687,81 @@ namespace Deployment.ScriptGenerator
 			
 			if (settings.Options.ReleaseOnNuGet) {
 				StartTarget(w, "publish-NuGet");
-				ExecuteProgram(w, "cmd", settings.Options.ReleaseDirectory,
-				               "/c", "NuGet", "push", "*.nupkg");
+				if (!settings.Options.Simulate) {
+					ExecuteProgram(w, "cmd", settings.Options.ReleaseDirectory,
+					               "/c", "NuGet", "push", "*.nupkg");
+				}
 				w.WriteEndElement();
 			}
 			
 			if (settings.Options.WebChangeLog || settings.Options.WebApiDoc) {
 				StartTarget(w, "publish-web");
 				
-				if (settings.Options.PublishGithubPages) {
-					if (settings.Options.WebChangeLog) {
-						CopyFile(w, settings.Options.ReleaseDirectory + "/" + settings.WebChangeLogFileName(ExternalSite.Github), "${internal.WebPath}/changelog.html", true);
+				if (!settings.Options.Simulate) {
+					if (settings.Options.PublishGithubPages) {
+						if (settings.Options.WebChangeLog) {
+							CopyFile(w, settings.Options.ReleaseDirectory + "/" + settings.WebChangeLogFileName(ExternalSite.Github), "${internal.WebPath}/changelog.html", true);
+						}
+						
+						if (settings.Options.WebApiDoc) {
+							w.WriteStartElement("delete");
+							w.WriteAttributeString("dir", "${internal.WebPath}/api");
+							w.WriteEndElement();
+							
+							w.WriteStartElement("copy");
+							w.WriteAttributeString("todir", "${internal.WebPath}/api");
+							WriteWebApiDocFileset(w);
+							w.WriteEndElement();
+						}
 					}
-					
-					if (settings.Options.WebApiDoc) {
-						w.WriteStartElement("delete");
-						w.WriteAttributeString("dir", "${internal.WebPath}/api");
-						w.WriteEndElement();
+					if (settings.Options.PublishSourceForgeProjectWeb) {
+						var args = new List<string>() {
+							"/c",
+							"WinSCP",
+							"/console",
+							"/command",
+							WINSCP_SF_CONNECTION_COMMAND,
+							"option batch continue",
+							"option confirm off",
+							"cd /home/project-web/${project.SourceForgeId}/htdocs"
+						};
 						
-						w.WriteStartElement("copy");
-						w.WriteAttributeString("todir", "${internal.WebPath}/api");
-						WriteWebApiDocFileset(w);
-						w.WriteEndElement();
-					}
-				}
-				if (settings.Options.PublishSourceForgeProjectWeb) {
-					var args = new List<string>() {
-						"/c",
-						"WinSCP",
-						"/console",
-						"/command",
-						WINSCP_SF_CONNECTION_COMMAND,
-						"option batch continue",
-						"option confirm off",
-						"cd /home/project-web/${project.SourceForgeId}/htdocs"
-					};
-					
-					if (settings.Options.WebChangeLog) {
-						args.Add("put " + settings.WebChangeLogFileName(ExternalSite.SourceForge) + " ./changelog.html");
-					}
-					
-					if (settings.Options.WebApiDoc) {
-						w.WriteStartElement("tar");
-						w.WriteAttributeString("destfile", settings.Options.ReleaseDirectory + "/webapidoc.tar.gz");
-						w.WriteAttributeString("compression", "GZip");
-						WriteWebApiDocFileset(w);
-						w.WriteEndElement();
+						if (settings.Options.WebChangeLog) {
+							args.Add("put " + settings.WebChangeLogFileName(ExternalSite.SourceForge) + " ./changelog.html");
+						}
 						
-						args.Add("mkdir newapi");
-						args.Add("put webapidoc.tar.gz newapi/");
-					}
-					
-					args.Add("close");
-					args.Add("exit");
-					
-					ExecuteProgram(w, "cmd", settings.Options.ReleaseDirectory,
-					               args.ToArray());
-					
-					if (settings.Options.WebApiDoc) {
-						w.WriteStartElement("delete");
-						w.WriteAttributeString("file", settings.Options.ReleaseDirectory + "/webapidoc.tar.bz");
-						w.WriteEndElement();
+						if (settings.Options.WebApiDoc) {
+							w.WriteStartElement("tar");
+							w.WriteAttributeString("destfile", settings.Options.ReleaseDirectory + "/webapidoc.tar.gz");
+							w.WriteAttributeString("compression", "GZip");
+							WriteWebApiDocFileset(w);
+							w.WriteEndElement();
+							
+							args.Add("mkdir newapi");
+							args.Add("put webapidoc.tar.gz newapi/");
+						}
 						
-						ExecuteProgram(w, "cmd", null,
-						               "/c", "plink", "-ssh", "-l", "${internal.SFUser},${project.SourceForgeId}", "-i", "${internal.SFSSHKey}", "shell.sourceforge.net", "create");
+						args.Add("close");
+						args.Add("exit");
 						
-						w.WriteStartElement("sleep");
-						w.WriteAttributeString("seconds", "30");
-						w.WriteEndElement();
+						ExecuteProgram(w, "cmd", settings.Options.ReleaseDirectory,
+						               args.ToArray());
 						
-						ExecuteProgram(w, "cmd", null,
-						               "/c", "plink", "-ssh", "-l", "${internal.SFUser},${project.SourceForgeId}", "-i", "${internal.SFSSHKey}", "shell.sourceforge.net", "(cd /home/project-web/${project.SourceForgeId}/htdocs/newapi && tar -xf webapidoc.tar.gz && mv Index.html index.html && cd .. && mv api oldapi && mv newapi api && rm -r oldapi) || echo 'The SSH session was not successful.' ; shutdown");
+						if (settings.Options.WebApiDoc) {
+							w.WriteStartElement("delete");
+							w.WriteAttributeString("file", settings.Options.ReleaseDirectory + "/webapidoc.tar.bz");
+							w.WriteEndElement();
+							
+							ExecuteProgram(w, "cmd", null,
+							               "/c", "plink", "-ssh", "-l", "${internal.SFUser},${project.SourceForgeId}", "-i", "${internal.SFSSHKey}", "shell.sourceforge.net", "create");
+							
+							w.WriteStartElement("sleep");
+							w.WriteAttributeString("seconds", "30");
+							w.WriteEndElement();
+							
+							ExecuteProgram(w, "cmd", null,
+							               "/c", "plink", "-ssh", "-l", "${internal.SFUser},${project.SourceForgeId}", "-i", "${internal.SFSSHKey}", "shell.sourceforge.net", "(cd /home/project-web/${project.SourceForgeId}/htdocs/newapi && tar -xf webapidoc.tar.gz && mv Index.html index.html && cd .. && mv api oldapi && mv newapi api && rm -r oldapi) || echo 'The SSH session was not successful.' ; shutdown");
+						}
 					}
 				}
 				
@@ -778,11 +790,13 @@ namespace Deployment.ScriptGenerator
 				w.WriteEndElement();
 				w.WriteEndElement();
 				
-				w.WriteStartElement("copy");
-				w.WriteAttributeString("file", tempInfoFile);
-				w.WriteAttributeString("tofile", settings.Options.PublicDirectory + "/" + settings.Options.ProjectInfoFile);
-				w.WriteAttributeString("overwrite", "true");
-				w.WriteEndElement();
+				if (!settings.Options.Simulate) {
+					w.WriteStartElement("copy");
+					w.WriteAttributeString("file", tempInfoFile);
+					w.WriteAttributeString("tofile", settings.Options.PublicDirectory + "/" + settings.Options.ProjectInfoFile);
+					w.WriteAttributeString("overwrite", "true");
+					w.WriteEndElement();
+				}
 				
 				w.WriteEndElement();
 			}
