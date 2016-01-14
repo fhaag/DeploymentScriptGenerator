@@ -155,11 +155,11 @@ namespace Deployment.ScriptGenerator
 				w.WriteEndElement();
 			}
 			
-			// release file names
+			// release names
 			
-			LoadReleaseFileName(settings, w, "src", "Source");
-			LoadReleaseFileName(settings, w, "bin", "Binary");
-			LoadReleaseFileName(settings, w, "chm", "Help");
+			LoadReleaseName(settings, w, "src", "Source");
+			LoadReleaseName(settings, w, "bin", "Binary");
+			LoadReleaseName(settings, w, "chm", "Help");
 			
 			// script help output
 			
@@ -644,8 +644,12 @@ namespace Deployment.ScriptGenerator
 				ExecuteProgram(w, "cmd", settings.Options.ReleaseDirectory,
 				               args.ToArray());
 				
-				// TODO: set download labels and default download via SF API
-				
+				SetSourceForgeReleaseProperties(settings, w, "Source", false);
+				SetSourceForgeReleaseProperties(settings, w, "Binary", true);
+				if (settings.Options.ReleaseApiDoc) {
+					SetSourceForgeReleaseProperties(settings, w, "Help", false);
+				}
+								
 				w.WriteEndElement();
 			}
 			
@@ -1128,8 +1132,10 @@ namespace Deployment.ScriptGenerator
 			w.WriteEndElement();
 		}
 		
-		private static void LoadReleaseFileName(GeneralSettings settings, XmlWriter w, string shortId, string longId)
+		private static void LoadReleaseName(GeneralSettings settings, XmlWriter w, string shortId, string longId)
 		{
+			// file name
+			
 			XmlPeek(w, settings.Options.PublicDirectory + "/" + settings.Options.ProjectInfoFile, "/project/downloads/file[@type = '" + shortId + "']/text()", "internal.Raw" + longId + "ReleaseName", true);
 			
 			string nameProp = "internal." + longId + "ReleaseName";
@@ -1140,6 +1146,106 @@ namespace Deployment.ScriptGenerator
 			                                                               "VERSION", "release.version",
 			                                                               "DATE", "internal.userFriendlyDate") + "}");
 			w.WriteAttributeString("overwrite", "false");
+			w.WriteEndElement();
+			
+			// title
+			
+			XmlPeek(w, settings.Options.PublicDirectory + "/" + settings.Options.ProjectInfoFile, "/project/downloads/file[@type = '" + shortId + "']/@title", "internal.Raw" + longId + "ReleaseTitle", true);
+			
+			nameProp = "internal." + longId + "ReleaseTitle";
+			
+			w.WriteStartElement("property");
+			w.WriteAttributeString("name", nameProp);
+			w.WriteAttributeString("value", "${" + StringSubstitutionChain(nameProp,
+			                                                               "VERSION", "release.version",
+			                                                               "DATE", "internal.userFriendlyDate") + "}");
+			w.WriteAttributeString("overwrite", "false");
+			w.WriteEndElement();
+		}
+		
+		private static void SetSourceForgeReleaseProperties(GeneralSettings settings, XmlWriter w, string longId, bool isStableDefaultDownload)
+		{
+			w.WriteStartElement("script");
+			w.WriteAttributeString("language", "c#");
+			
+			w.WriteStartElement("references");
+			w.WriteStartElement("include");
+			w.WriteAttributeString("name", "System.Web.dll");
+			w.WriteEndElement();
+			w.WriteEndElement();
+			
+			var encodingCode = new System.Text.StringBuilder();
+			encodingCode.AppendLine();
+			encodingCode.AppendLine("public static void ScriptMain(Project project)");
+			encodingCode.AppendLine("{");
+			encodingCode.AppendLine("\tproject.Properties[\"internal.UrlEncoded" + longId + "ReleaseTitle\"] = System.Web.HttpUtility.UrlPathEncode(project.Properties[\"internal." + longId + "ReleaseTitle\"]);");
+			encodingCode.AppendLine("}");
+			
+			w.WriteStartElement("code");
+			w.WriteCData(encodingCode.ToString());
+			w.WriteEndElement();
+			
+			w.WriteEndElement();
+			
+			w.WriteStartElement("exec");
+			w.WriteAttributeString("program", "cmd");
+			
+			w.WriteStartElement("arg");
+			w.WriteAttributeString("value", "/c");
+			w.WriteEndElement();
+			
+			w.WriteStartElement("arg");
+			w.WriteAttributeString("value", "curl");
+			w.WriteEndElement();
+			
+			w.WriteStartElement("arg");
+			w.WriteAttributeString("value", "-H");
+			w.WriteEndElement();
+			
+			w.WriteStartElement("arg");
+			w.WriteAttributeString("value", "Accept: application/json");
+			w.WriteEndElement();
+			
+			w.WriteStartElement("arg");
+			w.WriteAttributeString("value", "-X");
+			w.WriteEndElement();
+			
+			w.WriteStartElement("arg");
+			w.WriteAttributeString("value", "PUT");
+			w.WriteEndElement();
+			
+			w.WriteStartElement("arg");
+			w.WriteAttributeString("value", "-d");
+			w.WriteEndElement();
+			
+			w.WriteStartElement("arg");
+			w.WriteAttributeString("value", "download_label=${internal.UrlEncoded" + longId + "ReleaseTitle}");
+			w.WriteEndElement();
+			
+			if (isStableDefaultDownload) {
+				w.WriteStartElement("arg");
+				w.WriteAttributeString("value", "-d");
+				w.WriteAttributeString("if", "${internal.prerelease=='no'}");
+				w.WriteEndElement();
+				
+				w.WriteStartElement("arg");
+				w.WriteAttributeString("value", "default=windows%2Bdefault=mac%2Bdefault=linux%2Bdefault=bsd%2Bdefault=solaris%2Bdefault=others");
+				w.WriteAttributeString("if", "${internal.prerelease=='no'}");
+				w.WriteEndElement();
+			}
+
+			w.WriteStartElement("arg");
+			w.WriteAttributeString("value", "-d");
+			w.WriteEndElement();
+			
+			w.WriteStartElement("arg");
+			w.WriteAttributeString("value", "api_key=${internal.SFapikey}");
+			w.WriteEndElement();
+			
+			w.WriteStartElement("arg");
+			w.WriteAttributeString("value", "https://sourceforge.net/projects/${project.SourceForgeId}/files/${project.prettyId}/${release.version}/${internal." + longId + "ReleaseName}" + settings.SourceForgeDownloadFormat.GetFileExtension());
+			w.WriteEndElement();
+			
 			w.WriteEndElement();
 		}
 		
