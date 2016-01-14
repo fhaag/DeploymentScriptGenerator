@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
-    <ProjectGuid>{491AAE41-618B-43CB-BA93-0C9C88059EDD}</ProjectGuid>
+    <ProjectGuid>{717F1E9D-18F7-4B7F-AF90-B29FF9B152CC}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Library</OutputType>
-    <RootNamespace>Deployment.CodePlex</RootNamespace>
-    <AssemblyName>CodePlexDeployment</AssemblyName>
+    <RootNamespace>Deployment</RootNamespace>
+    <AssemblyName>Deployment.Common</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -36,39 +36,18 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Web References\www.codeplex.com\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.map</DependentUpon>
+    <Compile Include="ArchiveType.cs">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.Common.ArchiveTypeCS</LogicalName>
+      <Link>Resources\Code\Deployment.Common\ArchiveType.cs</Link>
     </Compile>
-    <Compile Include="Worker.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <WebReferences Include="Web References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WebReferenceUrl Include="https://www.codeplex.com/Services/ReleaseService.asmx">
-      <UrlBehavior>Static</UrlBehavior>
-      <UpdateFromURL>https://www.codeplex.com/Services/ReleaseService.asmx</UpdateFromURL>
-      <RelPath>Web References\www.codeplex.com</RelPath>
-      <Namespace>Deployment.CodePlex.Web</Namespace>
-    </WebReferenceUrl>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Web References\www.codeplex.com\Reference.map">
-      <Generator>MSDiscoCodeGenerator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Web References\www.codeplex.com\ReleaseService.disco" />
-    <None Include="Web References\www.codeplex.com\ReleaseService.wsdl" />
+    <Compile Include="ArchiveTypeUtilities.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -24,9 +24,9 @@ THE SOFTWARE.
 using System;
 using System.ComponentModel;
 
-namespace Deployment.ScriptGenerator
+namespace Deployment
 {
-	internal static class ArchiveTypeUtilities
+	public static class ArchiveTypeUtilities
 	{
 		public static string GetFileExtension(this ArchiveType archiveType)
 		{

@@ -64,8 +64,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiKeysTemplateFile.cs" />
-    <Compile Include="ArchiveType.cs" />
-    <Compile Include="ArchiveTypeUtilities.cs" />
     <Compile Include="BatchCreator.cs" />
     <Compile Include="CssWriter.cs" />
     <Compile Include="DownloadPackage.cs" />
@@ -84,23 +82,29 @@
     <EmbeddedResource Include="Resources\Code\XsltStringExtensions.cs">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.XsltStringExtensions</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Code\CodePlexDeployment\Properties\AssemblyInfo.cs">
+    <EmbeddedResource Include="..\CodePlexDeployment\Properties\AssemblyInfo.cs">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.CodePlexDeployment.AssemblyInfoCS</LogicalName>
+      <Link>Resources\Code\CodePlexDeployment\Properties\AssemblyInfo.cs</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Code\CodePlexDeployment\Web References\www.codeplex.com\Reference.cs">
+    <EmbeddedResource Include="..\CodePlexDeployment\Web References\www.codeplex.com\Reference.cs">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.CodePlexDeployment.WebReferenceCS</LogicalName>
+      <Link>Resources\Code\CodePlexDeployment\Web References\www.codeplex.com\Reference.cs</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Code\GithubDeployment\Properties\AssemblyInfo.cs">
+    <EmbeddedResource Include="..\GithubDeployment\Properties\AssemblyInfo.cs">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.GithubDeployment.AssemblyInfoCS</LogicalName>
+      <Link>Resources\Code\GithubDeployment\Properties\AssemblyInfo.cs</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Code\CodePlexDeployment\Worker.cs">
+    <EmbeddedResource Include="..\CodePlexDeployment\Worker.cs">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.CodePlexDeployment.WorkerCS</LogicalName>
+      <Link>Resources\Code\CodePlexDeployment\Worker.cs</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Code\GithubDeployment\Worker.cs">
+    <EmbeddedResource Include="..\GithubDeployment\Worker.cs">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.GithubDeployment.WorkerCS</LogicalName>
+      <Link>Resources\Code\GithubDeployment\Worker.cs</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Code\Deployment.Common\Properties\AssemblyInfo.cs">
+    <EmbeddedResource Include="..\Deployment.Common\Properties\AssemblyInfo.cs">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.Common.AssemblyInfoCS</LogicalName>
+      <Link>Resources\Code\Deployment.Common\Properties\AssemblyInfo.cs</Link>
     </EmbeddedResource>
     <Compile Include="Resources\ResourceLoader.cs" />
   </ItemGroup>
@@ -124,26 +128,33 @@
     <EmbeddedResource Include="Resources\Code\changelog.less">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.ChangeLogCSS</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Code\CodePlexDeployment\CodePlexDeployment.csproj">
+    <EmbeddedResource Include="..\CodePlexDeployment\CodePlexDeployment.csproj">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.CodePlexDeployment.Project</LogicalName>
+      <Link>Resources\Code\CodePlexDeployment\CodePlexDeployment.csproj</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Code\CodePlexDeployment\Web References\www.codeplex.com\Reference.map">
+    <EmbeddedResource Include="..\CodePlexDeployment\Web References\www.codeplex.com\Reference.map">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.CodePlexDeployment.WebReferenceMAP</LogicalName>
+      <Link>Resources\Code\CodePlexDeployment\Web References\www.codeplex.com\Reference.map</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Code\CodePlexDeployment\Web References\www.codeplex.com\ReleaseService.disco">
+    <EmbeddedResource Include="..\CodePlexDeployment\Web References\www.codeplex.com\ReleaseService.disco">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.CodePlexDeployment.WebReferenceDISCO</LogicalName>
+      <Link>Resources\Code\CodePlexDeployment\Web References\www.codeplex.com\ReleaseService.disco</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Code\CodePlexDeployment\Web References\www.codeplex.com\ReleaseService.wsdl">
+    <EmbeddedResource Include="..\CodePlexDeployment\Web References\www.codeplex.com\ReleaseService.wsdl">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.CodePlexDeployment.WebReferenceWSDL</LogicalName>
+      <Link>Resources\Code\CodePlexDeployment\Web References\www.codeplex.com\ReleaseService.wsdl</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Code\GithubDeployment\GithubDeployment.csproj">
+    <EmbeddedResource Include="..\GithubDeployment\GithubDeployment.csproj">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.GithubDeployment.Project</LogicalName>
+      <Link>Resources\Code\GithubDeployment\GithubDeployment.csproj</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Code\GithubDeployment\packages.config">
+    <EmbeddedResource Include="..\GithubDeployment\packages.config">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.GithubDeployment.NuGetPackages</LogicalName>
+      <Link>Resources\Code\GithubDeployment\packages.config</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Code\Deployment.Common\Deployment.Common.csproj">
+    <EmbeddedResource Include="..\Deployment.Common\Deployment.Common.csproj">
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.Common.Project</LogicalName>
+      <Link>Resources\Code\Deployment.Common\Deployment.Common.csproj</Link>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +168,12 @@
     <Folder Include="Resources\Code\Deployment.Common\Properties" />
     <Folder Include="Resources\Code\GithubDeployment" />
     <Folder Include="Resources\Code\GithubDeployment\Properties" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Deployment.Common\Deployment.Common.csproj">
+      <Project>{717F1E9D-18F7-4B7F-AF90-B29FF9B152CC}</Project>
+      <Name>Deployment.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
