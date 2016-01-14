@@ -92,6 +92,10 @@ namespace Deployment.ScriptGenerator
 					creationBatchCommand.Append(" --primarycolor " + settings.Options.PrimaryColor);
 				}
 				
+				if ((settings.Options.CustomSourceExtensions != null) && (settings.Options.CustomSourceExtensions.Count > 0)) {
+					creationBatchCommand.Append(" --sourceextensions=" + string.Join(":", settings.Options.CustomSourceExtensions));
+				}
+				
 				File.WriteAllText(Path.Combine(settings.BasePath, "createdeploymentscript.bat"), creationBatchCommand.ToString());
 			}
 		}

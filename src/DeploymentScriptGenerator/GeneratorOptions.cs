@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 using CommandLine;
@@ -175,6 +176,9 @@ namespace Deployment.ScriptGenerator
 		
 		[Option("primarycolor", DefaultValue = DEFAULT_PRIMARY_COLOR, HelpText = "The primary color used in the web-based changelog. This must be a six digit hexadecimal RGB color with a good contrast to white.")]
 		public string PrimaryColor { get; set; }
+		
+		[OptionList("sourceextensions", Separator = ':', HelpText = "A (colon-separated) list of custom file extensions that will be included in the sources release.")]
+		public IList<string> CustomSourceExtensions { get; set; }
 		
 		[HelpOption]
 		public string GetUsage()

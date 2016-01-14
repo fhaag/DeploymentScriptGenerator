@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Xml;
 
 using Deployment.ScriptGenerator.Resources;
@@ -185,27 +186,34 @@ namespace Deployment.ScriptGenerator
 			
 			WriteHeadlineComment(w, "Prepare Release Files");
 			
-			WritePatternSet(w, "srcfiles",
-			                new[] {
-			                	"**/*.sln",
-			                	"**/*.csproj",
-			                	"**/*.cs",
-			                	"**/*.xaml",
-			                	"**/*.ico",
-			                	"**/*.png",
-			                	"**/readme.txt",
-			                	"**/*.LICENSE",
-			                	"**/*.snk",
-			                	"**/*.resx",
-			                	"**/*.config",
-			                	"**/*.map",
-			                	"**/*.disco",
-			                	"**/*.wsdl"
-			                },
-			                new[] {
-			                	"**/bin/**",
-			                	"**/obj/**"
-			                });
+			{
+				var srcPatterns = new List<string>() {
+					"**/*.sln",
+					"**/*.csproj",
+					"**/*.cs",
+					"**/*.xaml",
+                	"**/*.ico",
+                	"**/*.png",
+                	"**/readme.txt",
+                	"**/*.LICENSE",
+                	"**/*.snk",
+                	"**/*.resx",
+                	"**/*.config",
+                	"**/*.map",
+                	"**/*.disco",
+                	"**/*.wsdl"
+				};
+				if (settings.Options.CustomSourceExtensions != null) {
+					srcPatterns.AddRange(settings.Options.CustomSourceExtensions.Select(ext => "**/*." + ext));
+				}
+				
+				WritePatternSet(w, "srcfiles",
+				                srcPatterns,
+				                new[] {
+				                	"**/bin/**",
+				                	"**/obj/**"
+				                });
+			}
 			WritePatternSet(w, "binfiles",
 			                new[] {
 			                	"*.dll",
