@@ -146,6 +146,10 @@ namespace Deployment.ScriptGenerator
 				result.Add(GeneratorOptions.CREATE_STYLE_SHEETS_FLAG);
 			}
 			
+			if (settings.Options.Simulate) {
+				result.Add(GeneratorOptions.SIMULATE_FLAG);
+			}
+			
 			return result;
 		}
 	}
