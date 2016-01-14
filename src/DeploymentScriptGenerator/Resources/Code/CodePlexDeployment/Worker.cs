@@ -174,7 +174,6 @@ namespace Deployment.CodePlex
 		
 		private static IEnumerable<ReleaseFileInfo> ExtractReleaseFiles(XmlDocument configFile, XmlNamespaceManager nsMap, string releaseBasePath, string releaseVersion, string userFriendlyDate)
 		{
-			string baseUrl = configFile.SelectSingleNode("/local:project/local:downloads/@baseUrl", nsMap).Value;
 			foreach (var fileNode in configFile.SelectNodes("/local:project/local:downloads/local:file", nsMap).Cast<XmlElement>()) {
 				var rf = new ReleaseFile();
 				rf.Name = ReplaceSymbols(fileNode.GetAttribute("title"), releaseVersion, userFriendlyDate);

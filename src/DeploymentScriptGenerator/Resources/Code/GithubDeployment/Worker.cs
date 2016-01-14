@@ -162,7 +162,6 @@ namespace Deployment.Github
 		
 		private static IEnumerable<ReleaseFileInfo> ExtractReleaseFiles(XmlDocument configFile, XmlNamespaceManager nsMap, string releaseBasePath, string releaseVersion, string userFriendlyDate)
 		{
-			string baseUrl = configFile.SelectSingleNode("/local:project/local:downloads/@baseUrl", nsMap).Value;
 			foreach (var fileNode in configFile.SelectNodes("/local:project/local:downloads/local:file", nsMap).Cast<XmlElement>()) {
 				string fn = ReplaceSymbols(fileNode.InnerText, releaseVersion, userFriendlyDate);
 				yield return new ReleaseFileInfo(fn,
