@@ -106,6 +106,14 @@
       <LogicalName>Deployment.ScriptGenerator.Resources.Code.Common.AssemblyInfoCS</LogicalName>
       <Link>Resources\Code\Deployment.Common\Properties\AssemblyInfo.cs</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\Deployment.Common\ArchiveType.cs">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.Common.ArchiveTypeCS</LogicalName>
+      <Link>Resources\Code\Deployment.Common\ArchiveType.cs</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Deployment.Common\ArchiveTypeUtilities.cs">
+      <LogicalName>Deployment.ScriptGenerator.Resources.Code.Common.ArchiveTypeUtilitiesCS</LogicalName>
+      <Link>Resources\Code\Deployment.Common\ArchiveTypeUtilities.cs</Link>
+    </EmbeddedResource>
     <Compile Include="Resources\ResourceLoader.cs" />
   </ItemGroup>
   <ItemGroup>

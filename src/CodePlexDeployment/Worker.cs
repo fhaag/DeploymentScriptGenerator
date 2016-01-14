@@ -75,7 +75,7 @@ namespace Deployment.CodePlex
 		
 		private static Regex versionStructure = new Regex(@"^([0-9]+(?:\.[0-9]+)*)(?:-([^\-\.]+))?$");
 		
-		public static void Publish(string projectInfoFilename, string releaseBasePath, string releaseVersion, string userFriendlyDate, string isoDate, string user, string pw)
+		public static void Publish(string projectInfoFilename, string releaseBasePath, ArchiveType format, string releaseVersion, string userFriendlyDate, string isoDate, string user, string pw)
 		{
 			if (projectInfoFilename == null) {
 				throw new ArgumentNullException("projectInfoFilename");
@@ -121,7 +121,7 @@ namespace Deployment.CodePlex
 			string status = DetermineStatus(version, isPrerelease);
 			string releaseDesc = CompileReleaseNotes(doc, nsMap);
 			
-			var files = ExtractReleaseFiles(doc, nsMap, releaseBasePath, releaseVersion, userFriendlyDate).ToArray();
+			var files = ExtractReleaseFiles(doc, nsMap, releaseBasePath, format, releaseVersion, userFriendlyDate).ToArray();
 			var defaultFile = files.FirstOrDefault(rfi => isPrerelease ? rfi.PrereleaseDefault : rfi.StableDefault);
 			
 			using (var svc = new ReleaseService()) {
@@ -172,13 +172,13 @@ namespace Deployment.CodePlex
 			}
 		}
 		
-		private static IEnumerable<ReleaseFileInfo> ExtractReleaseFiles(XmlDocument configFile, XmlNamespaceManager nsMap, string releaseBasePath, string releaseVersion, string userFriendlyDate)
+		private static IEnumerable<ReleaseFileInfo> ExtractReleaseFiles(XmlDocument configFile, XmlNamespaceManager nsMap, string releaseBasePath, ArchiveType format, string releaseVersion, string userFriendlyDate)
 		{
 			foreach (var fileNode in configFile.SelectNodes("/local:project/local:downloads/local:file", nsMap).Cast<XmlElement>()) {
 				var rf = new ReleaseFile();
 				rf.Name = ReplaceSymbols(fileNode.GetAttribute("title"), releaseVersion, userFriendlyDate);
 				
-				rf.FileName = ReplaceSymbols(fileNode.InnerText, releaseVersion, userFriendlyDate);
+				rf.FileName = ReplaceSymbols(fileNode.InnerText, releaseVersion, userFriendlyDate) + format.GetFileExtension();
 				
 				using (var f = File.OpenRead(Path.Combine(releaseBasePath, rf.FileName))) {
 					using (var ms = new MemoryStream()) {

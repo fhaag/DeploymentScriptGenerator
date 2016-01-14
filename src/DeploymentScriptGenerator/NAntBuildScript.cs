@@ -571,6 +571,9 @@ namespace Deployment.ScriptGenerator
 				w.WriteStartElement("include");
 				w.WriteAttributeString("name", "bin/build/deployment/GithubDeployment.dll");
 				w.WriteEndElement();
+				w.WriteStartElement("include");
+				w.WriteAttributeString("name", "bin/build/deployment/Deployment.Common.dll");
+				w.WriteEndElement();
 				w.WriteEndElement();
 				w.WriteStartElement("imports");
 				w.WriteStartElement("import");
@@ -586,6 +589,7 @@ namespace Deployment.ScriptGenerator
 					githubDeploymentCode.AppendLine("{");
 					githubDeploymentCode.AppendLine("	Deployment.Github.Worker.Publish(Path.Combine(project.BaseDirectory, \"" + settings.Options.PublicDirectory + "\", \"" + settings.Options.ProjectInfoFile + "\"),");
 					githubDeploymentCode.AppendLine("	                                 Path.Combine(project.BaseDirectory, \"" + settings.Options.ReleaseDirectory + "\"),");
+					githubDeploymentCode.AppendLine("	                                 " + typeof(ArchiveType).FullName + "." + settings.GithubDownloadFormat.ToString() + ",");
 					githubDeploymentCode.AppendLine("	                                 project.Properties[\"release.version\"],");
 					githubDeploymentCode.AppendLine("	                                 project.Properties[\"internal.userFriendlyDate\"],");
 					githubDeploymentCode.AppendLine("	                                 project.Properties[\"internal.isoDate\"],");
@@ -639,6 +643,9 @@ namespace Deployment.ScriptGenerator
 				w.WriteStartElement("include");
 				w.WriteAttributeString("name", "bin/build/deployment/CodePlexDeployment.dll");
 				w.WriteEndElement();
+				w.WriteStartElement("include");
+				w.WriteAttributeString("name", "bin/build/deployment/Deployment.Common.dll");
+				w.WriteEndElement();
 				w.WriteEndElement();
 				w.WriteStartElement("imports");
 				w.WriteStartElement("import");
@@ -648,19 +655,20 @@ namespace Deployment.ScriptGenerator
 				w.WriteStartElement("code");
 				
 				{
-					var githubDeploymentCode = new System.Text.StringBuilder();
-					githubDeploymentCode.AppendLine();
-					githubDeploymentCode.AppendLine("public static void ScriptMain(Project project)");
-					githubDeploymentCode.AppendLine("{");
-					githubDeploymentCode.AppendLine("	Deployment.CodePlex.Worker.Publish(Path.Combine(project.BaseDirectory, \"" + settings.Options.PublicDirectory + "\", \"" + settings.Options.ProjectInfoFile + "\"),");
-					githubDeploymentCode.AppendLine("	                                   Path.Combine(project.BaseDirectory, \"" + settings.Options.ReleaseDirectory + "\"),");
-					githubDeploymentCode.AppendLine("	                                   project.Properties[\"release.version\"],");
-					githubDeploymentCode.AppendLine("	                                   project.Properties[\"internal.userFriendlyDate\"],");
-					githubDeploymentCode.AppendLine("	                                   project.Properties[\"internal.isoDate\"],");
-					githubDeploymentCode.AppendLine("	                                   project.Properties[\"internal.CodePlexUser\"],");
-					githubDeploymentCode.AppendLine("	                                   project.Properties[\"internal.CodePlexPW\"]);");
-					githubDeploymentCode.AppendLine("}");
-					w.WriteCData(githubDeploymentCode.ToString());
+					var codePlexDeploymentCode = new System.Text.StringBuilder();
+					codePlexDeploymentCode.AppendLine();
+					codePlexDeploymentCode.AppendLine("public static void ScriptMain(Project project)");
+					codePlexDeploymentCode.AppendLine("{");
+					codePlexDeploymentCode.AppendLine("	Deployment.CodePlex.Worker.Publish(Path.Combine(project.BaseDirectory, \"" + settings.Options.PublicDirectory + "\", \"" + settings.Options.ProjectInfoFile + "\"),");
+					codePlexDeploymentCode.AppendLine("	                                   Path.Combine(project.BaseDirectory, \"" + settings.Options.ReleaseDirectory + "\"),");
+					codePlexDeploymentCode.AppendLine("	                                   " + typeof(ArchiveType).FullName + "." + settings.CodePlexDownloadFormat.ToString() + ",");
+					codePlexDeploymentCode.AppendLine("	                                   project.Properties[\"release.version\"],");
+					codePlexDeploymentCode.AppendLine("	                                   project.Properties[\"internal.userFriendlyDate\"],");
+					codePlexDeploymentCode.AppendLine("	                                   project.Properties[\"internal.isoDate\"],");
+					codePlexDeploymentCode.AppendLine("	                                   project.Properties[\"internal.CodePlexUser\"],");
+					codePlexDeploymentCode.AppendLine("	                                   project.Properties[\"internal.CodePlexPW\"]);");
+					codePlexDeploymentCode.AppendLine("}");
+					w.WriteCData(codePlexDeploymentCode.ToString());
 				}
 				
 				w.WriteEndElement();

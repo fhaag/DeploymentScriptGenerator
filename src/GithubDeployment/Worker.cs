@@ -84,7 +84,7 @@ namespace Deployment.Github
 		
 		private static Regex versionStructure = new Regex(@"^([0-9]+(?:\.[0-9]+)*)(?:-([^\-\.]+))?$");
 		
-		public static void Publish(string projectInfoFilename, string releaseBasePath, string releaseVersion, string userFriendlyDate, string isoDate, string user, string pw)
+		public static void Publish(string projectInfoFilename, string releaseBasePath, ArchiveType format, string releaseVersion, string userFriendlyDate, string isoDate, string user, string pw)
 		{
 			if (projectInfoFilename == null) {
 				throw new ArgumentNullException("projectInfoFilename");
@@ -143,7 +143,7 @@ namespace Deployment.Github
 			releaseTask.RunSynchronously();
 			var release = releaseTask.Result;
 			
-			var files = ExtractReleaseFiles(doc, nsMap, releaseBasePath, releaseVersion, userFriendlyDate).ToArray();
+			var files = ExtractReleaseFiles(doc, nsMap, releaseBasePath, format, releaseVersion, userFriendlyDate).ToArray();
 			foreach (ReleaseFileInfo f in files) {
 				var asset = new ReleaseAssetUpload(f.DestName, f.MimeType, f.Data, null);
 				var uploadTask = github.Release.UploadAsset(release, asset);
@@ -160,10 +160,10 @@ namespace Deployment.Github
 			return result.ToString();
 		}
 		
-		private static IEnumerable<ReleaseFileInfo> ExtractReleaseFiles(XmlDocument configFile, XmlNamespaceManager nsMap, string releaseBasePath, string releaseVersion, string userFriendlyDate)
+		private static IEnumerable<ReleaseFileInfo> ExtractReleaseFiles(XmlDocument configFile, XmlNamespaceManager nsMap, string releaseBasePath, ArchiveType format, string releaseVersion, string userFriendlyDate)
 		{
 			foreach (var fileNode in configFile.SelectNodes("/local:project/local:downloads/local:file", nsMap).Cast<XmlElement>()) {
-				string fn = ReplaceSymbols(fileNode.InnerText, releaseVersion, userFriendlyDate);
+				string fn = ReplaceSymbols(fileNode.InnerText, releaseVersion, userFriendlyDate) + format.GetFileExtension();
 				yield return new ReleaseFileInfo(fn,
 				                                 Path.Combine(releaseBasePath, fn),
 				                                 GetMimeType(fn));

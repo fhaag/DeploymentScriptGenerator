@@ -42,10 +42,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArchiveType.cs">
-      <LogicalName>Deployment.ScriptGenerator.Resources.Code.Common.ArchiveTypeCS</LogicalName>
-      <Link>Resources\Code\Deployment.Common\ArchiveType.cs</Link>
-    </Compile>
+    <Compile Include="ArchiveType.cs" />
     <Compile Include="ArchiveTypeUtilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
