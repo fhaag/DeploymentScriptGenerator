@@ -23,12 +23,12 @@ THE SOFTWARE.
  */
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
-
 using Octokit;
 
 namespace Deployment.Github
@@ -166,7 +166,7 @@ namespace Deployment.Github
 				string fn = ReplaceSymbols(fileNode.InnerText, releaseVersion, userFriendlyDate) + format.GetFileExtension();
 				yield return new ReleaseFileInfo(fn,
 				                                 Path.Combine(releaseBasePath, fn),
-				                                 GetMimeType(fn));
+				                                 GetMimeType(format));
 			}
 		}
 		
@@ -175,14 +175,19 @@ namespace Deployment.Github
 			return pattern.Replace("%VERSION%", version).Replace("%DATE%", date);
 		}
 		
-		private static string GetMimeType(string fn)
+		private static string GetMimeType(ArchiveType format)
 		{
-			if (fn.EndsWith(".zip")) {
-				return "application/zip";
-			} else if (fn.EndsWith(".tar.gz")) {
-				return "application/gzip";
-			} else {
-				throw new InvalidOperationException("Unsupported file type: " + fn);
+			switch (format) {
+				case ArchiveType.Zip:
+					return "application/zip";
+				case ArchiveType.Tar:
+					return "application/x-tar";
+				case ArchiveType.TarBz2:
+					return "application/x-bzip2";
+				case ArchiveType.TarGz:
+					return "application/gzip";
+				default:
+					throw new InvalidEnumArgumentException("format", (int)format, typeof(ArchiveType));
 			}
 		}
 		
