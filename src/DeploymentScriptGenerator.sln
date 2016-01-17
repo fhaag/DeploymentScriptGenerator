@@ -4,11 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # SharpDevelop 4.4
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeploymentScriptGenerator", "DeploymentScriptGenerator\DeploymentScriptGenerator.csproj", "{956EC19E-417F-4D8B-A1EA-E915BE349752}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deployment.Common", "Deployment.Common\Deployment.Common.csproj", "{717F1E9D-18F7-4B7F-AF90-B29FF9B152CC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deployment.Common", "DeploymentScriptGenerator\Resources\Code\DeploymentLibs\Deployment.Common\Deployment.Common.csproj", "{717F1E9D-18F7-4B7F-AF90-B29FF9B152CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodePlexDeployment", "CodePlexDeployment\CodePlexDeployment.csproj", "{491AAE41-618B-43CB-BA93-0C9C88059EDD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodePlexDeployment", "DeploymentScriptGenerator\Resources\Code\DeploymentLibs\CodePlexDeployment\CodePlexDeployment.csproj", "{491AAE41-618B-43CB-BA93-0C9C88059EDD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GithubDeployment", "GithubDeployment\GithubDeployment.csproj", "{183CFCD0-974D-4FF5-81AA-D13D735F59B0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GithubDeployment", "DeploymentScriptGenerator\Resources\Code\DeploymentLibs\GithubDeployment\GithubDeployment.csproj", "{183CFCD0-974D-4FF5-81AA-D13D735F59B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
